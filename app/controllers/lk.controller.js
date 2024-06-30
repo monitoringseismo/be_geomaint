@@ -5,6 +5,7 @@ const help = new Helpers()
 const lk = new LkModel()
 const session = new SessionModel()
 const {ObjectId} = require('mongodb')
+require("core-js/actual/array/group-by");
 var message, data
 class LkController{
     async insert(req, res){
@@ -41,6 +42,29 @@ class LkController{
             data = req.body
             const listlk = await lk.list(data.filter, data.sort, data.limit);
             message = {success:true, data:listlk};
+            res.status(200);
+            res.send(message);
+        } catch (error) {
+            message = {success:false, error: error.message};
+            // await help.pushTelegram(req, error.message);
+            res.status(500);
+            res.send(message);
+        }
+    }
+
+    async statusLK(req, res){
+        try {
+            const listlk = await lk.list({},{},0);
+            var mapLK = listlk.groupBy((lk)=> {return lk.status});
+            var {belum_diproses, diproses, menunggu_respon, dikirim, dibatalkan} = mapLK
+            var mp = {
+                "Belum Diproses" : belum_diproses || [],
+                "Diproses" : diproses || [],
+                "Menunggu Respon" : menunggu_respon || [],
+                "Dikirim" : dikirim || [],
+                "Dibatalkan" : dibatalkan || []
+            }
+            message = {success:true, data:mp};
             res.status(200);
             res.send(message);
         } catch (error) {

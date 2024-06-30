@@ -39,4 +39,5 @@ module.exports.route = (app) => {
    app.get('/monitoring/statusSensor', metadata.statusSensor)
    app.get('/monitoring/statistikSensor', metadata.statistikSensor)
    app.get('/monitoring/statistikLK', lk.statistikLK)
+   app.get('/monitoring/statusLK', lk.statusLK)
 }

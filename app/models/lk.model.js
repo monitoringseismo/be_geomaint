@@ -22,10 +22,15 @@ class LK {
         return this.show(result.insertedId);
     }
 
-    async list(filter, sort, limit){
+    async list(filter, sort, limit = 0){
         const db = await this.getInstance();
         filter.deleted_at = {$exists:false}
-        const result = await db.collection('laporan_kerusakan').find(filter).sort(sort).limit(limit);
+        var result 
+        if (limit > 0) {
+            result = await db.collection('laporan_kerusakan').find(filter).sort(sort).limit(limit);
+        } else {
+            result = await db.collection('laporan_kerusakan').find(filter).sort(sort);
+        }
         return result.toArray();
     }
 
