@@ -30,6 +30,15 @@ class Metadata {
         return result.toArray();
     }
 
+    async statistik(){
+        const db = await this.getInstance();
+        // filter.deleted_at = {$exists:false}
+        const result = await db.collection('metadata').aggregate([
+            {"$group" : {_id:"$status_site", count:{$sum:1}}}
+        ])
+        return result.toArray();
+    }
+
     async show(id){
         const db = await this.getInstance();
         const result = await db.collection('metadata').findOne({_id:new ObjectId(id), deleted_at:{$exists:false}});

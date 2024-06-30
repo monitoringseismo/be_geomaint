@@ -64,6 +64,36 @@ class MetadataController{
         }
     }
 
+    async statistikSensor(req, res){
+        try {
+            data = req.body
+            var a = 0
+            var b = 0
+            var c = 0
+            const listmetadata = await metadata.statistik();
+            listmetadata.forEach(stat => {
+                var str = stat._id.toLowerCase();
+                console.log(str)
+                if (str === "sudah pm dan status ok"){ 
+                    a = stat.count
+                } else if ( str === "sudah pm tapi perlu penanganan"){
+                    b = stat.count
+                } else {
+                    c = stat.count
+                }
+            });
+            var dt = { "Site ON": a, "Site Off": c, "Site ON Perlu Penanganan" : b}
+            message = {success:true, data:dt};
+            res.status(200);
+            res.send(message);
+        } catch (error) {
+            message = {success:false, error: error.message};
+            // await help.pushTelegram(req, error.message);
+            res.status(500);
+            res.send(message);
+        }
+    }
+
     async update(req, res){
         try {
             data = req.body

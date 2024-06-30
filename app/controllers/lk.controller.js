@@ -51,6 +51,51 @@ class LkController{
         }
     }
 
+    async statistikLK(req, res){
+        try {
+            data = req.body
+            const listlk = await lk.statistik();
+            var a = 0,b = 0,c=0,d=0,e=0
+            listlk.forEach(stat => {
+                var str = stat._id
+                switch (Number(str)) {
+                    case 1:
+                        a = stat.count
+                        break;
+                    case 2:
+                        b = stat.count
+                        break;
+                    case 3:
+                        c = stat.count
+                        break;
+                    case 4:
+                        d = stat.count
+                        break;
+                    case 5:
+                        e = stat.count
+                        break;
+                    default:
+                        break;
+                }
+            });
+            var dt = {
+                "Belum Diproses" : a,
+                "Diproses":b,
+                "Menunggu Respon":c,
+                "Dikirim":d,
+                "Dibatalkan":e
+            }
+            message = {success:true, data:dt};
+            res.status(200);
+            res.send(message);
+        } catch (error) {
+            message = {success:false, error: error.message};
+            // await help.pushTelegram(req, error.message);
+            res.status(500);
+            res.send(message);
+        }
+    }
+
     async update(req, res){
         try {
             data = req.body

@@ -37,4 +37,6 @@ module.exports.route = (app) => {
     app.post('/laporanKerusakan/list', lk.list);
    //----- LAPORAN KERUSAKAN Endpoint -------//
    app.get('/monitoring/statusSensor', metadata.statusSensor)
+   app.get('/monitoring/statistikSensor', metadata.statistikSensor)
+   app.get('/monitoring/statistikLK', lk.statistikLK)
 }

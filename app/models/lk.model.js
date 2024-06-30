@@ -56,5 +56,14 @@ class LK {
         // }
         return message;
     }
+
+    async statistik(){
+        const db = await this.getInstance();
+        // filter.deleted_at = {$exists:false}
+        const result = await db.collection('laporan_kerusakan').aggregate([
+            {"$group" : {_id:"$status", count:{$sum:1}}}
+        ])
+        return result.toArray();
+    }
 }
 module.exports = LK;
