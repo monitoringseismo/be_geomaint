@@ -6,10 +6,16 @@ const user = new UserCon()
 const metadata = new MetadataCon()
 const ppm = new PpmCon()
 const lk = new LkCon()
+
+const multer = require("multer");
+const imagehelper = require("../app/helpers/images.helper")
 module.exports.route = (app) => {
     app.get('/', function(req, res){
         res.json('Seismonitor Active Mode');
     })
+
+    app.post('/uploadImage', multer({ storage: imagehelper.diskStorage }).single("photo"), ppm.upImg);
+    app.post('/uploadFile', multer({ storage: imagehelper.itemStorage }).single("file"), ppm.upFile);
     //----- USER Endpoint -------//
     app.post('/login', user.login);
     app.post('/user/', user.insert);

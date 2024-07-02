@@ -87,5 +87,41 @@ class PpmController{
             res.send(message);
         }
     }
+    async upImg(req, res){
+        const filename = req.file.filename;
+        // const file = req.file.path;
+        // var size = 300;
+        // if (req.body.type == 'gaji') {
+        //   size = 600;
+        // }
+        // if (!file) {
+        //   res.status(400).send({
+        //     status: false,
+        //     data: "No File is selected.",
+        //   });
+        // }
+        // resize.resize(filename, size);
+        // const url = `https://possaku.s3.amazonaws.com/${process.env.AWS_S3_KEY}/images/${filename}`
+        data = {succcess:true, path: `/images/${filename}`}
+        res.send(data);
+    }
+    async upFile(req, res){
+        const filename = req.file.filename;
+        // const file = req.file.path;
+        // var size = 300;
+        // if (req.body.type == 'gaji') {
+        //   size = 600;
+        // }
+        // if (!file) {
+        //   res.status(400).send({
+        //     status: false,
+        //     data: "No File is selected.",
+        //   });
+        // }
+        // resize.resize(filename, size);
+        // const url = `https://possaku.s3.amazonaws.com/${process.env.AWS_S3_KEY}/images/${filename}`
+        data = {succcess:true, path: `/file/${filename}`}
+        res.send(data);
+    }
 }
 module.exports = PpmController;
