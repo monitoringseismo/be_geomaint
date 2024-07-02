@@ -18,32 +18,32 @@ module.exports.route = (app) => {
     app.post('/uploadFile', multer({ storage: imagehelper.itemStorage }).single("file"), ppm.upFile);
     //----- USER Endpoint -------//
     app.post('/login', user.login);
-    app.post('/user/', user.insert);
-    app.put('/user/:id', user.update);
-    app.get('/user/:id', user.show);
-    app.delete('/user/:id', user.delete);
-    app.post('/user/list', user.list);
+    app.post('/user/', user.checkSessionApi ,user.insert);
+    app.put('/user/:id', user.checkSessionApi ,user.update);
+    app.get('/user/:id', user.checkSessionApi ,user.show);
+    app.delete('/user/:id', user.checkSessionApi ,user.delete);
+    app.post('/user/list', user.checkSessionApi ,user.list);
     //----- PPM Endpoint -------//
-    app.post('/ppm/', ppm.insert);
-    app.put('/ppm/:id', ppm.update);
-    app.get('/ppm/:id', ppm.show);
-    app.delete('/ppm/:id', ppm.delete);
-    app.post('/ppm/list', ppm.list);
+    app.post('/ppm/', user.checkSessionApi , ppm.insert);
+    app.put('/ppm/:id', user.checkSessionApi , ppm.update);
+    app.get('/ppm/:id', user.checkSessionApi , ppm.show);
+    app.delete('/ppm/:id', user.checkSessionApi , ppm.delete);
+    app.post('/ppm/list', user.checkSessionApi , ppm.list);
     //----- METADATA Endpoint -------//
-    app.post('/metadata/', metadata.insert);
-    app.put('/metadata/:id', metadata.update);
-    app.get('/metadata/:id', metadata.show);
-    app.delete('/metadata/:id', metadata.delete);
-    app.post('/metadata/list', metadata.list);
+    app.post('/metadata/', user.checkSessionApi , metadata.insert);
+    app.put('/metadata/:id', user.checkSessionApi , metadata.update);
+    app.get('/metadata/:id', user.checkSessionApi , metadata.show);
+    app.delete('/metadata/:id', user.checkSessionApi , metadata.delete);
+    app.post('/metadata/list', user.checkSessionApi , metadata.list);
     //----- LAPORAN KERUSAKAN Endpoint -------//
-    app.post('/laporanKerusakan/', lk.insert);
-    app.put('/laporanKerusakan/:id', lk.update);
-    app.get('/laporanKerusakan/:id', lk.show);
-    app.delete('/laporanKerusakan/:id', lk.delete);
-    app.post('/laporanKerusakan/list', lk.list);
+    app.post('/laporanKerusakan/', user.checkSessionApi , lk.insert);
+    app.put('/laporanKerusakan/:id', user.checkSessionApi , lk.update);
+    app.get('/laporanKerusakan/:id', user.checkSessionApi , lk.show);
+    app.delete('/laporanKerusakan/:id', user.checkSessionApi , lk.delete);
+    app.post('/laporanKerusakan/list', user.checkSessionApi , lk.list);
    //----- LAPORAN KERUSAKAN Endpoint -------//
-   app.get('/monitoring/statusSensor', metadata.statusSensor)
-   app.get('/monitoring/statistikSensor', metadata.statistikSensor)
-   app.get('/monitoring/statistikLK', lk.statistikLK)
-   app.get('/monitoring/statusLK', lk.statusLK)
+   app.get('/monitoring/statusSensor',user.checkSessionApi, metadata.statusSensor)
+   app.get('/monitoring/statistikSensor',user.checkSessionApi, metadata.statistikSensor)
+   app.get('/monitoring/statistikLK',user.checkSessionApi, lk.statistikLK)
+   app.get('/monitoring/statusLK',user.checkSessionApi, lk.statusLK)
 }

@@ -50,6 +50,12 @@ class Users {
         return show;
     }
 
+    async addLastActivityDate(nsim){
+        const db = await this.getInstance();
+        const id = {nsim:nsim.toString()}
+        const upd = {$set:{last_activity_date: new Date()}}
+        await db.collection('users').updateMany(id,upd);
+    }
 
     async delete(id){
         const db = await this.getInstance();

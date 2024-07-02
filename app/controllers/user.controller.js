@@ -5,7 +5,7 @@ const { ObjectId } = require('mongodb')
 const help = new Helpers()
 const user = new UsersModel()
 const session = new SessionModel()
-
+const Constant = require('../../config/constant');
 var message, data;
 
 class UserController {
@@ -106,6 +106,20 @@ class UserController {
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
+        }
+    }
+
+    async checkSessionApi(req, res, next) {
+        const nsim = req.headers.nsim;
+        const token = req.headers.token;
+        const accessLog = await session.checkAccess(nsim, token);
+        if (accessLog === true && nsim && token) {
+            user.addLastActivityDate(nsim)
+            next();
+        } else {
+            data = { success: false, msg: Constant.SESSION_DENNIED }
+            res.status(500);
+            res.send(data);
         }
     }
 }
