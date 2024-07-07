@@ -5,6 +5,7 @@ const help = new Helpers()
 const lk = new LkModel()
 const session = new SessionModel()
 const {ObjectId} = require('mongodb')
+const axios = require('axios');
 require("core-js/actual/array/group-by");
 var message, data
 class LkController{
@@ -144,6 +145,20 @@ class LkController{
             message = {success:true, data:deletelk};
             res.status(200);
             res.send(message);
+        } catch (error) {
+            message = {success:false, error: error.message};
+            // await help.pushTelegram(req, error.message);
+            res.status(500);
+            res.send(message);
+        }
+    }
+
+    async slmon(req, res){
+        try {
+            var date = Date.now()
+            const call = await axios.get(`http://202.90.198.40/sismon-wrs/assets/sismon-slmon2/data/slmon.all.laststatus.json?_=${date}`)
+            res.status(200);
+            res.send(call.data);
         } catch (error) {
             message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);

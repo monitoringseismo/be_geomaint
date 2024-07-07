@@ -46,4 +46,6 @@ module.exports.route = (app) => {
    app.get('/monitoring/statistikSensor',user.checkSessionApi, metadata.statistikSensor)
    app.get('/monitoring/statistikLK',user.checkSessionApi, lk.statistikLK)
    app.get('/monitoring/statusLK',user.checkSessionApi, lk.statusLK)
+    //----- Get External API ----//
+    app.get('/monitoring/slmon',user.checkSessionApi, lk.slmon)
 }
