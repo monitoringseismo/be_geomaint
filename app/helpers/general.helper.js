@@ -8,16 +8,18 @@ class Helpers {
 
     statusLK(st) {
         switch (Number(st)) {
-            case 1:
+            case 0:
                 return "Belum Diproses"
-            case 2:
+            case 1:
                 return "Diproses"
-            case 3:
+            case 2:
                 return "Menunggu Respon"
-            case 4:
+            case 3:
                 return "Dikirim"
-            default:
+            case 4:
                 return "Dibatalkan"
+            default:
+                return "Selesai"
         }
     }
     mappingUser(user) {

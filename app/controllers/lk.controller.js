@@ -12,7 +12,7 @@ class LkController{
     async insert(req, res){
         try {
             data = req.body;
-            data.status = 1
+            data.status = 0
             const lkData = await lk.insert(data);
             message = {success: true, lk: lkData};
             res.status(200).send(message);
@@ -65,11 +65,11 @@ class LkController{
             const listlk = await lk.list({},{},0);
             var mapLK = listlk.groupBy((lk)=> {return lk.status});
             var mp = {
-                "Belum Diproses" : mapLK["1"] || [],
-                "Diproses" : mapLK["2"] || [],
-                "Menunggu Respon" :mapLK["3"] || [],
-                "Dikirim" : mapLK["4"] || [],
-                "Dibatalkan" : mapLK["5"] || []
+                "Belum Diproses" : mapLK["0"] || [],
+                "Diproses" : mapLK["1"] || [],
+                "Menunggu Respon" :mapLK["2"] || [],
+                "Dikirim" : mapLK["3"] || [],
+                "Dibatalkan" : mapLK["4"] || []
             }
             message = {success:true, data:mp};
             res.status(200);
@@ -90,19 +90,19 @@ class LkController{
             listlk.forEach(stat => {
                 var str = stat._id
                 switch (Number(str)) {
-                    case 1:
+                    case 0:
                         a = stat.count
                         break;
-                    case 2:
+                    case 1:
                         b = stat.count
                         break;
-                    case 3:
+                    case 2:
                         c = stat.count
                         break;
-                    case 4:
+                    case 3:
                         d = stat.count
                         break;
-                    case 5:
+                    case 4:
                         e = stat.count
                         break;
                     default:
