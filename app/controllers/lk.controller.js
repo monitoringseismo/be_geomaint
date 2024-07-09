@@ -12,6 +12,7 @@ class LkController{
     async insert(req, res){
         try {
             data = req.body;
+            data.status = 1
             const lkData = await lk.insert(data);
             message = {success: true, lk: lkData};
             res.status(200).send(message);
@@ -27,6 +28,9 @@ class LkController{
         try {
             data = req.params;
             const lkData = await lk.show(data.id);
+            if (lkData) {
+                lkData.status = help.statusLK(lkData.status)
+            }
             message = {success: true, data: lkData};
             res.status(200).send(message);
         } catch (error) {
@@ -41,7 +45,10 @@ class LkController{
     async list(req, res){
         try {
             data = req.body
-            const listlk = await lk.list(data.filter, data.sort, data.limit);
+            var listlk = await lk.list(data.filter, data.sort, data.limit);
+            listlk.map((lk)=>{
+                lk.status = help.statusLK(lk.status)
+            })
             message = {success:true, data:listlk};
             res.status(200);
             res.send(message);
@@ -57,13 +64,12 @@ class LkController{
         try {
             const listlk = await lk.list({},{},0);
             var mapLK = listlk.groupBy((lk)=> {return lk.status});
-            var {belum_diproses, diproses, menunggu_respon, dikirim, dibatalkan} = mapLK
             var mp = {
-                "Belum Diproses" : belum_diproses || [],
-                "Diproses" : diproses || [],
-                "Menunggu Respon" : menunggu_respon || [],
-                "Dikirim" : dikirim || [],
-                "Dibatalkan" : dibatalkan || []
+                "Belum Diproses" : mapLK["1"] || [],
+                "Diproses" : mapLK["2"] || [],
+                "Menunggu Respon" :mapLK["3"] || [],
+                "Dikirim" : mapLK["4"] || [],
+                "Dibatalkan" : mapLK["5"] || []
             }
             message = {success:true, data:mp};
             res.status(200);
@@ -126,7 +132,10 @@ class LkController{
             data = req.body
             var upd = {$set : data};
             var id = req.params.id;
-            const update = await lk.update({_id:new ObjectId(id)},upd);
+            var update = await lk.update({_id:new ObjectId(id)},upd);
+            if (update) {
+                update.status = help.statusLK(update.status)
+            }
             message = {success:true, data:update};
             res.status(200);
             res.send(message);
