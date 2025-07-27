@@ -30,6 +30,36 @@ class Ppm {
         return result.toArray();
     }
 
+    async site(filter, sort, limit){
+        const db = await this.getInstance();
+        var filter = {status_site: filter.status_site, deleted_at: {$exists: false}};
+        if (filter.kode) {
+            filter.kode = filter.kode;
+        }
+        const result = await db.collection('ppm').aggregate([
+            { $match: filter },
+            { $lookup: {
+                from: 'metadata',
+                localField: 'kode',
+                foreignField: 'kode',
+                as: 'metadata'
+            }},
+            { $unwind: '$metadata' },
+            { $project: {
+                _id: 1,
+                kode: 1,
+                status_site: 1,
+                rekomendasi: 1,
+                last_pm: 1,
+                metadata: {
+                    nama: '$metadata.nama',
+                    lokasi: '$metadata.lokasi'
+                }
+            }}
+        ]);
+        return result.toArray();
+    }
+
     async show(id){
         const db = await this.getInstance();
         const result = await db.collection('ppm').findOne({_id:new ObjectId(id), deleted_at:{$exists:false}});

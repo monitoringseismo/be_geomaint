@@ -50,7 +50,22 @@ class PpmController{
             res.send(message);
         } catch (error) {
             message = {success:false, error: error.message};
-            await help.pushTelegram(req, error.message);
+            // await help.pushTelegram(req, error.message);
+            res.status(500);
+            res.send(message);
+        }
+    }
+
+    async site(req, res){
+        try {
+            data = req.body
+            const listppm = await ppm.site(data.filter, data.sort, data.limit);
+            message = {success:true, data:listppm};
+            res.status(200);
+            res.send(message);
+        } catch (error) {
+            message = {success:false, error: error.message};
+            // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
         }
@@ -67,7 +82,7 @@ class PpmController{
             res.send(message);
         } catch (error) {
             message = {success:false, error: error.message};
-            await help.pushTelegram(req, error.message);
+            // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
         }
@@ -82,7 +97,7 @@ class PpmController{
             res.send(message);
         } catch (error) {
             message = {success:false, error: error.message};
-            await help.pushTelegram(req, error.message);
+            // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
         }

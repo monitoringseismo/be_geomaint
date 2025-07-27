@@ -113,6 +113,15 @@ class UserController {
         const nsim = req.headers.nsim;
         const token = req.headers.token;
         const accessLog = await session.checkAccess(nsim, token);
+
+        if (req.body?.filter?.dateStart && req.body?.filter?.dateEnd) {
+            req.body.filter.created_at = help.dateRange(req.body.filter.dateStart, req.body.filter.dateEnd);
+            delete req.body.filter.dateStart;
+            delete req.body.filter.dateEnd;
+        }
+        if(req.body?.limit === undefined || req.body?.limit === null || req.body?.limit < 1) {
+            req.body.limit = 1000000; // set default limit
+        }
         if (accessLog === true && nsim && token) {
             user.addLastActivityDate(nsim)
             next();

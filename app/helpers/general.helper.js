@@ -37,5 +37,14 @@ class Helpers {
             .toString('hex') // convert to hexadecimal format
             .slice(0, len).toUpperCase();   // return required number of characters
     }
+
+    dateRange(start, end) {
+        var startDate = new Date(start);
+        var endDate = new Date(end);
+        return {
+            $gte: startDate,
+            $lte: endDate
+        }
+    }
 }
 module.exports = Helpers;

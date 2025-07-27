@@ -5,6 +5,7 @@ const help = new Helpers()
 const metadata = new MetadataModel()
 const {ObjectId} = require('mongodb')
 const session = new SessionModel()
+const xlsx = require('xlsx');
 var message, data
 class MetadataController{
     async insert(req, res){
@@ -44,7 +45,7 @@ class MetadataController{
             res.send(message);
         } catch (error) {
             message = {success:false, error: error.message};
-            await help.pushTelegram(req, error.message);
+            // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
         }
@@ -58,7 +59,27 @@ class MetadataController{
             res.send(message);
         } catch (error) {
             message = {success:false, error: error.message};
-            await help.pushTelegram(req, error.message);
+            // await help.pushTelegram(req, error.message);
+            res.status(500);
+            res.send(message);
+        }
+    }
+
+    //function to download report as .xlsx file
+    async downloadReport(req, res){
+        try {
+            data = req.body
+            var columns = data.columns || await metadata.column();
+            const listmetadata = await metadata.downloadReport(data.filter, data.sort, data.limit, columns);
+            const ws = xlsx.utils.json_to_sheet(listmetadata, {header: columns.map(col => col.nama_kolom)});
+            const wb = xlsx.utils.book_new();
+            xlsx.utils.book_append_sheet(wb, ws, 'Metadata Report');
+            const filePath = `public/file/metadata_report_${new Date().toISOString()}.xlsx`;
+            xlsx.writeFile(wb, filePath);
+            res.download(filePath);
+        } catch (error) {
+            message = {success:false, error: error.message};
+            // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
         }
@@ -105,7 +126,7 @@ class MetadataController{
             res.send(message);
         } catch (error) {
             message = {success:false, error: error.message};
-            await help.pushTelegram(req, error.message);
+            // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
         }
@@ -120,7 +141,22 @@ class MetadataController{
             res.send(message);
         } catch (error) {
             message = {success:false, error: error.message};
-            await help.pushTelegram(req, error.message);
+            // await help.pushTelegram(req, error.message);
+            res.status(500);
+            res.send(message);
+        }
+    }
+
+    async column(req, res){
+        try {
+            console.log("Fetching columns for metadata");
+            const columns = await metadata.column();
+            message = {success:true, data:columns};
+            res.status(200);
+            res.send(message);
+        } catch (error) {
+            message = {success:false, error: error.message};
+            // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
         }

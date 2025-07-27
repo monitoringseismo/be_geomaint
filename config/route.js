@@ -29,12 +29,15 @@ module.exports.route = (app) => {
     app.get('/ppm/:id', user.checkSessionApi , ppm.show);
     app.delete('/ppm/:id', user.checkSessionApi , ppm.delete);
     app.post('/ppm/list', user.checkSessionApi , ppm.list);
+    app.post('/ppm/site', user.checkSessionApi , ppm.site);
     //----- METADATA Endpoint -------//
     app.post('/metadata/', user.checkSessionApi , metadata.insert);
     app.put('/metadata/:id', user.checkSessionApi , metadata.update);
     app.get('/metadata/:id', user.checkSessionApi , metadata.show);
     app.delete('/metadata/:id', user.checkSessionApi , metadata.delete);
     app.post('/metadata/list', user.checkSessionApi , metadata.list);
+    app.post('/metadata/column', user.checkSessionApi ,  metadata.column);
+    app.post('/metadata/downloadReport',user.checkSessionApi ,  metadata.downloadReport);
     //----- LAPORAN KERUSAKAN Endpoint -------//
     app.post('/laporanKerusakan/', user.checkSessionApi , lk.insert);
     app.put('/laporanKerusakan/:id', user.checkSessionApi , lk.update);
