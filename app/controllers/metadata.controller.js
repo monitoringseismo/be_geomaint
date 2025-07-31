@@ -6,16 +6,16 @@ const metadata = new MetadataModel()
 const {ObjectId} = require('mongodb')
 const session = new SessionModel()
 const xlsx = require('xlsx');
-var message, data
+// var message, data
 class MetadataController{
     async insert(req, res){
         try {
-            data = req.body;
+            var data = req.body;
             const metadataData = await metadata.insert(data);
-            message = {success: true, metadata: metadataData};
+            var message = {success: true, metadata: metadataData};
             res.status(200).send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -24,12 +24,12 @@ class MetadataController{
 
     async show(req, res){
         try {
-            data = req.params;
+            var data = req.params;
             const metadataData = await metadata.show(data.id);
-            message = {success: true, metadata: metadataData};
+            var message = {success: true, metadata: metadataData};
             res.status(200).send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -38,13 +38,22 @@ class MetadataController{
 
     async list(req, res){
         try {
-            data = req.body
+            var data = req.body
+            if (!data.filter) {
+                data.filter = {};
+            }
+            if (!data.sort) {
+                data.sort = {created_at: -1}; // Default sort by created_at descending
+            }
+            if (!data.limit) {
+                data.limit = 1000; // Default limit
+            }
             const listmetadata = await metadata.list(data.filter, data.sort, data.limit);
-            message = {success:true, data:listmetadata};
+            var message = {success:true, data:listmetadata};
             res.status(200);
             res.send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -52,13 +61,13 @@ class MetadataController{
     }
     async statusSensor(req, res){
         try {
-            data = req.body
+            var data = req.body
             const listmetadata = await metadata.list({}, {}, 1000);
-            message = {success:true, data:listmetadata};
+            var message = {success:true, data:listmetadata};
             res.status(200);
             res.send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -68,7 +77,7 @@ class MetadataController{
     //function to download report as .xlsx file
     async downloadReport(req, res){
         try {
-            data = req.body
+            var data = req.body
             var columns = data.columns || await metadata.column();
             const listmetadata = await metadata.downloadReport(data.filter, data.sort, data.limit, columns);
             const ws = xlsx.utils.json_to_sheet(listmetadata, {header: columns.map(col => col.nama_kolom)});
@@ -78,7 +87,7 @@ class MetadataController{
             xlsx.writeFile(wb, filePath);
             res.download(filePath);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -87,7 +96,7 @@ class MetadataController{
 
     async statistikSensor(req, res){
         try {
-            data = req.body
+            var data = req.body
             var a = 0
             var b = 0
             var c = 0
@@ -104,11 +113,11 @@ class MetadataController{
                 }
             });
             var dt = { "Site ON": a, "Site Off": c, "Site ON Perlu Penanganan" : b}
-            message = {success:true, data:dt};
+            var message = {success:true, data:dt};
             res.status(200);
             res.send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -117,15 +126,15 @@ class MetadataController{
 
     async update(req, res){
         try {
-            data = req.body
+            var data = req.body
             var upd = {$set : data};
             var id = req.params.id;
             const update = await metadata.update({_id:new ObjectId(id)},upd);
-            message = {success:true, data:update};
+            var message = {success:true, data:update};
             res.status(200);
             res.send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -134,13 +143,13 @@ class MetadataController{
 
     async delete(req, res){
         try {
-            data = req.params
+            var data = req.params
             const deletemetadata = await metadata.delete(data.id);
-            message = {success:true, data:deletemetadata};
+            var message = {success:true, data:deletemetadata};
             res.status(200);
             res.send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -151,11 +160,11 @@ class MetadataController{
         try {
             console.log("Fetching columns for metadata");
             const columns = await metadata.column();
-            message = {success:true, data:columns};
+            var message = {success:true, data:columns};
             res.status(200);
             res.send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);

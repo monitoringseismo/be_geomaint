@@ -26,7 +26,52 @@ class Metadata {
     async list(filter, sort, limit){
         const db = await this.getInstance();
         filter.deleted_at = {$exists:false}
-        const result = await db.collection('metadata').find(filter).sort(sort).limit(limit);
+        const result = await db.collection('metadata').aggregate([
+            { $match: filter },
+            {
+                $lookup:
+                {
+                    from: "ppm",
+                    let: {
+                        kodeMetadata: "$kode"
+                    },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $eq: ["$kode", "$$kodeMetadata"]
+                                }
+                            }
+                        },
+                        {
+                            $count: "jumlah"
+                        }
+                    ],
+                    as: "ppm_count"
+                }
+            },
+            {
+                $addFields:
+                {
+                    count_pm: {
+                        $ifNull: [
+                            {
+                                $arrayElemAt: [
+                                    "$ppm_count.jumlah",
+                                    0
+                                ]
+                            },
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                $unset: 'ppm_count'
+            },
+            { $sort: sort },
+            { $limit: limit }
+        ]);
         return result.toArray();
     }
 
