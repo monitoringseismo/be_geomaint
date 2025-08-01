@@ -61,8 +61,8 @@ class MetadataController{
     }
     async statusSensor(req, res){
         try {
-            var data = req.body
-            const listmetadata = await metadata.list({}, {}, 1000);
+            // var data = req.body
+            const listmetadata = await metadata.list({}, {"kode":1}, 1000);
             var message = {success:true, data:listmetadata};
             res.status(200);
             res.send(message);
