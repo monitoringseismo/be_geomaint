@@ -65,6 +65,20 @@ class Ppm {
         const result = await db.collection('ppm').findOne({_id:new ObjectId(id), deleted_at:{$exists:false}});
         return result;
     }
+    // function query to get details of PPM lookup with metadata as info_sites
+    async getDetails(id){
+        const db = await this.getInstance();
+        const result = await db.collection('ppm').aggregate([
+            {$match:{_id:new ObjectId(id)}},
+            {$lookup:{
+                    from: "metadata",
+                    localField: "kode",
+                    foreignField: "kode",
+                    as: "info_sites"
+                    }}
+        ])
+        return result.toArray();
+    }
 
     async update(id, upd){
         const db = await this.getInstance();

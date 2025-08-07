@@ -5,6 +5,7 @@ const help = new Helpers()
 const ppm = new PpmModel()
 const {ObjectId} = require('mongodb')
 const metadata = new MetadataModel()
+var html_to_pdf = require('html-pdf-node');
 var message, data
 class PpmController{
     async insert(req, res){
@@ -18,6 +19,38 @@ class PpmController{
             }
             message = {success: true, ppm: ppmData};
             res.status(200).send(message);
+        } catch (error) {
+            message = {success:false, error: error.message};
+            // await help.pushTelegram(req, error.message);
+            res.status(500);
+            res.send(message);
+        }
+    }
+
+    // print data from html to pdf use puppeteer
+    async pdf(req, res){
+        try {
+            var id = req.params.id;
+            const ppmData = await ppm.getDetails(id);
+            if (!ppmData) {
+                message = {success: false, error: 'PPM not found'};
+                res.status(404).send(message);
+                return;
+            }
+            const html = await help.exportPpmPdf(ppmData[0], "")
+            console.log(html);
+            // const pdfBuffer = await help.exportHtmlToPdf(html);
+            var file = { content: html };
+            var options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'], timeout: 600000, waitUntil: 'networkidle0' };
+            html_to_pdf.generatePdf(file, options).then(pdfBuffer => {
+                res.set({
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': `attachment; filename=ppm_report_${ppmData[0].kode}.pdf`
+                });
+                res.send(pdfBuffer);
+            });
+            console.log("PDF generated successfully");
+            // console.log(pdfBuffer);
         } catch (error) {
             message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
