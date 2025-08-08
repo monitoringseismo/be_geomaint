@@ -115,6 +115,10 @@ class Helpers {
         .content {
             margin: 0 50px;
         }
+        .content img {
+            max-width: 200px;
+            height: auto;
+        }
         .section-title {
             font-weight: bold;
             margin-top: 20px;
