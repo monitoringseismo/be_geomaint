@@ -38,7 +38,7 @@ class PpmController{
                 return;
             }
             const html = await help.exportPpmPdf(ppmData[0], "")
-            console.log(html);
+            // console.log(ppmData[0]);
             // const pdfBuffer = await help.exportHtmlToPdf(html);
             var file = { content: html };
             var options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'], timeout: 600000, waitUntil: 'networkidle0' };
@@ -51,6 +51,7 @@ class PpmController{
             });
             console.log("PDF generated successfully");
             // console.log(pdfBuffer);
+            // res.send(html);
         } catch (error) {
             message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
