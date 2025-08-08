@@ -27,8 +27,8 @@ module.exports.route = (app) => {
     app.post('/ppm/', user.checkSessionApi , ppm.insert);
     app.put('/ppm/:id', user.checkSessionApi , ppm.update);
     app.get('/ppm/:id', user.checkSessionApi , ppm.show);
-    app.get('/ppm/pdf/:id', ppm.pdf);
-    app.get('/ppm/pdf2/:id', ppm.pdf2);
+    app.get('/ppm/pdf/:id', ppm.pdf2);
+    app.get('/ppm/pdf2/:id', ppm.pdf);
     app.get('/ppm/html/:id', ppm.pdfHtml);
     app.delete('/ppm/:id', user.checkSessionApi , ppm.delete);
     app.post('/ppm/list', user.checkSessionApi , ppm.list);
