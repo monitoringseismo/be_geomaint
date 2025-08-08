@@ -86,6 +86,7 @@ class Helpers {
         var html = `<!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="User-Agent" content="Mozilla/5.0">
     <title>Laporan Pemeliharaan</title>
     <style>
         body {

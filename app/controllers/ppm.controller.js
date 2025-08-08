@@ -41,7 +41,7 @@ class PpmController{
             // console.log(ppmData[0]);
             // const pdfBuffer = await help.exportHtmlToPdf(html);
             var file = { content: html };
-            var options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'], timeout: 600000, waitUntil: 'networkidle0' };
+            var options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox'], timeout: 600000, waitUntil: 'networkidle0', preferCSSPageSize: true, puppeteerArgs: { headless: true } };
             html_to_pdf.generatePdf(file, options).then(pdfBuffer => {
                 res.set({
                 'Content-Type': 'application/pdf',
