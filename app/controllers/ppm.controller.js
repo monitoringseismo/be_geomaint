@@ -60,6 +60,39 @@ class PpmController{
         }
     }
 
+    async pdf2(req, res){
+        try {
+            var id = req.params.id;
+            const ppmData = await ppm.getDetails(id);
+            if (!ppmData) {
+                message = {success: false, error: 'PPM not found'};
+                res.status(404).send(message);
+                return;
+            }
+            const html = await help.exportPpmPdf(ppmData[0], "")
+            // console.log(ppmData[0]);
+            const pdfBuffer = await help.generatePdf(html);
+            // var file = { content: html };
+            // var options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox'], timeout: 600000, waitUntil: 'networkidle0', preferCSSPageSize: true, puppeteerArgs: { headless: true } };
+            // html_to_pdf.generatePdf(file, options).then(pdfBuffer => {
+                res.set({
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': `attachment; filename=ppm_report_${ppmData[0].kode}.pdf`,
+                'Content-Length': pdfBuffer.length
+                });
+                res.end(pdfBuffer);
+            // });
+            // console.log("PDF generated successfully");
+            // console.log(pdfBuffer);
+            // res.send(html);
+        } catch (error) {
+            message = {success:false, error: error.message};
+            // await help.pushTelegram(req, error.message);
+            res.status(500);
+            res.send(message);
+        }
+    }
+
     async pdfHtml(req, res){
         try {
             var id = req.params.id;

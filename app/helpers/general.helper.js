@@ -26,7 +26,8 @@ class Helpers {
               args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
         const page = await browser.newPage();
-        await page.setContent(html);
+        await page.setContent(html, { waitUntil: 'networkidle0' });
+        // await page.waitForTimeout(500);
         const pdfBuffer = await page.pdf({
             format: 'A4',
             // printBackground: true,
