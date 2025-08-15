@@ -2,10 +2,12 @@ const UserCon = require('../app/controllers/user.controller')
 const MetadataCon = require('../app/controllers/metadata.controller')
 const PpmCon = require('../app/controllers/ppm.controller')
 const LkCon = require('../app/controllers/lk.controller')
+const ReportCon = require('../app/controllers/report.controller')
 const user = new UserCon()
 const metadata = new MetadataCon()
 const ppm = new PpmCon()
 const lk = new LkCon()
+const report = new ReportCon()
 
 const multer = require("multer");
 const imagehelper = require("../app/helpers/images.helper")
@@ -54,4 +56,12 @@ module.exports.route = (app) => {
    app.get('/monitoring/statusLK',user.checkSessionApi, lk.statusLK)
     //----- Get External API ----//
     app.get('/monitoring/slmon',user.checkSessionApi, lk.slmon)
+
+    //-- Open API --//
+    app.post('/openapi/metadata', metadata.list);
+    app.post('/openapi/report',  report.insert);
+    app.put('/openapi/report/:id',  report.update);
+    app.get('/openapi/report/:id',  report.show);
+    app.delete('/openapi/report/:id',  report.delete);
+    app.post('/openapi/report/list',  report.list);
 }
