@@ -41,6 +41,12 @@ class Report {
         return result;
     }
 
+    async findOne(filter){
+        const db = await this.getInstance();    
+        const result = await db.collection('report').findOne(filter)
+        return result;
+    }
+
     async update(id, upd){
         const db = await this.getInstance();
         id.deleted_at = {$exists:false}

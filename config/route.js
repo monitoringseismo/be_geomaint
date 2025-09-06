@@ -64,5 +64,7 @@ module.exports.route = (app) => {
     app.get('/openapi/report/:id',  report.show);
     app.delete('/openapi/report/:id',  report.delete);
     app.post('/openapi/report/list',  report.list);
+    app.get('/openapi/report/pdf/:id', report.pdf);
+    app.get('/openapi/report/pdf2/:id', report.pdf2);
     app.post('/openapi/uploadImage', multer({ storage: imagehelper.diskStorage }).single("photo"), ppm.upImg);
 }
