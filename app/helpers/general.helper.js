@@ -84,477 +84,248 @@ class Helpers {
     }
 
     exportPemeliharaanForm(data){
-        var html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Pemeliharaan Peralatan</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 10px; font-size: 14px }
-        .container { max-width: 800px; margin: auto; border: 1px solid #ccc; padding: 10px; }
-        .header, .footer { display: flex; justify-content: space-between; align-items: flex-start; }
-        .header img { width: 60px; height: auto; }
-        .header-info { text-align: left; }
-        .title { text-align: center; margin: 5px 0; font-weight: bold; }
-        .job-info table, .equipment-table, .signature-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .job-info td { padding: 5px; }
-        .equipment-table th, .equipment-table td { border: 1px solid black; padding: 8px; text-align: center; }
-        .equipment-table th { background-color: #f2f2f2; }
-        .equipment-table .category-row td { background-color: #e9e9e9; font-weight: bold; text-align: left; }
-        .equipment-table .item-name { text-align: left; }
-        .signature-table td { vertical-align: top; text-align: center; padding-top: 15px; }
-        .signature-box { height: 80px; }
-        .no-print { margin-top: 20px; text-align: center; }
-        @media print {
-            .no-print { display: none; }
-            body { margin: 0; }
-            .container { border: none; }
-        }
-    </style>
-</head>
-<body>
-
-<div class="container" id="form-container">
-    </div>
-
-<script>
-    // Data JSON dari dokumen
-    const formData = {
-      "dokumen": {
-        "no": "FM.IRG.DIK.25",
-        "terbit": "02 Juli 2025",
-        "revisi": "00",
-        "halaman": "3 / 3",
-        "judul": "FORM PEMELIHARAAN PERALATAN",
-        "sub_judul": "PEMELIHARAAN ALOPTAMA"
-      },
-      "pekerjaan": {
-        "nama_tim": "TIM PEMELIHARAAN ALOPTAMA GEOFISIKA",
-        "lokasi": "Site DBKI",
-        "tanggal": "02 Juli 2025-04 Juli 2025"
-      },
-      "peralatan": [
-        {
-          "kategori": "SISTEM SENSOR DAN AKUISISI DATA",
-          "items": [
-            { "nama": "Seismometer", "operasi": "Normal", "kondisi": "Bersih", "keterangan": "" },
-            { "nama": "Accelerometer", "operasi": "Normal", "kondisi": "Bersih", "keterangan": "" },
-            { "nama": "Digitizer", "operasi": "Normal", "kondisi": "Bersih", "keterangan": "" }
-          ]
-        },
-        {
-          "kategori": "SISTEM POWER",
-          "items": [
-            { "nama": "Baterai", "operasi": "Normal", "kondisi": "Bersih", "keterangan": "" },
-            { "nama": "Solar Panel", "operasi": "Normal", "kondisi": "Bersih", "keterangan": "" },
-            { "nama": "MPPT Solar Controler", "operasi": "Normal", "kondisi": "Bersih", "keterangan": "" }
-          ]
-        },
-        {
-          "kategori": "SISTEM KOMUNIKASI",
-          "items": [
-            { "nama": "LNB", "operasi": "-", "kondisi": "-", "keterangan": "" },
-            { "nama": "BUC", "operasi": "-", "kondisi": "-", "keterangan": "" },
-            { "nama": "Feedhorn", "operasi": "-", "kondisi": "-", "keterangan": "" },
-            { "nama": "Modem VSAT", "operasi": "-", "kondisi": "-", "keterangan": "" },
-            { "nama": "Modem GSM", "operasi": "Normal", "kondisi": "Bersih", "keterangan": "" }
-          ]
-        }
-      ],
-      "personil": {
-        "ketua_tim": {
-          "nama": "Nama Ketua Tim Anda",
-          "nip": "NIP Ketua Tim Anda"
-        },
-        "teknisi": [
-          { "nama": "Nama Teknisi 1" },
-          { "nama": "Nama Teknisi 2" },
-          { "nama": "Nama Teknisi 3" }
-        ]
-      }
-    };
-
-    // Fungsi untuk membangun HTML dari data JSON
-    function renderForm(data) {
-        const container = document.getElementById('form-container');
-
-        // Generate Equipment Table Rows
-        let equipmentRows = '';
-        data.peralatan.forEach((category, catIndex) => {
-            equipmentRows += '<tr class="category-row"><td colspan="6"><b>${catIndex + 1}. ${category.kategori}</b></td></tr>';
-            category.items.forEach(item => {
-                equipmentRows += '
-                    <tr>
-                        <td class="item-name">${item.nama}</td>
-                        <td>${item.operasi === 'Normal' ? '√' : ''}</td>
-                        <td>${item.operasi === 'Tidak Normal' ? '√' : ''}</td>
-                        <td>${item.kondisi === 'Bersih' ? '√' : ''}</td>
-                        <td>${item.kondisi === 'Kotor' ? '√' : ''}</td>
-                        <td>${item.keterangan}</td>
-                    </tr>
-                ';
-            });
-        });
-        
-        // Generate Technicians Signature
-        let techSignatures = '';
-        data.personil.teknisi.forEach(tech => {
-            techSignatures += '
-                <td>
-                    <div class="signature-box"></div>
-                    <u>${tech.nama}</u>
-                </td>
-            ';
-        });
-
-
-        // Full HTML Structure
-        container.innerHTML = '
-            <div class="header">
-                <img src="https://possaku.store/dev/monitor/images/Logo_BMKG.png" alt="Logo BMKG">
-            <div class="title">
-                        <h2>DIREKTORAT INSTRUMENTASI DAN KALIBRASI</h2>
-            </div>
-                <div class="header-info">
-                    <p>
-                        No. Dokumen: ${data.dokumen.no}<br>
-                        Tanggal terbit: ${data.dokumen.terbit}<br>
-                        No. Revisi: ${data.dokumen.revisi}<br>
-                        Halaman: ${data.dokumen.halaman}<br>
-                    </p>
-                </div>
-            </div>
-            <div class="title">
-                <h3>${data.dokumen.judul} ${data.dokumen.sub_judul}</h3>
-            </div>
-            <hr>
-            <table class="job-info">
-                <tr>
-                    <td width="20%"><b>NAMA TIM KERJA</b></td>
-                    <td width="5%">:</td>
-                    <td>${data.pekerjaan.nama_tim}</td>
-                </tr>
-                <tr>
-                    <td><b>LOKASI</b></td>
-                    <td>:</td>
-                    <td>${data.pekerjaan.lokasi}</td>
-                </tr>
-                 <tr>
-                    <td><b>TANGGAL</b></td>
-                    <td>:</td>
-                    <td>${data.pekerjaan.tanggal}</td>
-                </tr>
-            </table>
-
-            <table class="equipment-table">
-                <thead>
-                    <tr>
-                        <th rowspan="2" width="30%">Nama Peralatan</th>
-                        <th colspan="2">Operasi (√)</th>
-                        <th colspan="2">Kondisi (√)</th>
-                        <th rowspan="2">Keterangan</th>
-                    </tr>
-                    <tr>
-                        <th>Normal</th>
-                        <th>Tidak Normal</th>
-                        <th>Bersih</th>
-                        <th>Kotor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${equipmentRows}
-                </tbody>
-            </table>
-
-            <table class="signature-table">
-                <tr>
-                    <td width="50%">Mengetahui,<br>Ketua Tim Kerja Pemeliharaan Aloptama Geofisika</td>
-                    <td width="50%" colspan="3">Teknisi On Duty</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="signature-box"></div>
-                        <u>${data.personil.ketua_tim.nama}</u><br>
-                        ${data.personil.ketua_tim.nip}
-                    </td>
-                    ${techSignatures}
-                </tr>
-            </table>
-        ';
-    }
-
-    // Panggil fungsi untuk merender form saat halaman dimuat
-    document.addEventListener('DOMContentLoaded', () => {
-        renderForm(formData);
+      function renderPeralatan(peralatan) {
+  let rows = "";
+  peralatan.forEach((cat, i) => {
+    rows += `<tr class="category-row"><td colspan="6"><b>${i + 1}. ${cat.kategori}</b></td></tr>`;
+    cat.items.forEach(item => {
+      rows += `
+        <tr>
+          <td class="item-name">${item.nama}</td>
+          <td>${item.operasi === "Normal" ? "√" : ""}</td>
+          <td>${item.operasi === "Tidak Normal" ? "√" : ""}</td>
+          <td>${item.kondisi === "Bersih" ? "√" : ""}</td>
+          <td>${item.kondisi === "Kotor" ? "√" : ""}</td>
+          <td>${item.keterangan || ""}</td>
+        </tr>
+      `;
     });
+  });
+  return rows;
+}
 
-</script>
-</body>
-</html>`
-return html;
-    }
-
-    exportCheckListForm(data){
-        var html = `<!DOCTYPE html>
-<html lang="en">
-<head>
+// build teknisi
+function renderTeknisi(teknisi) {
+  if (!teknisi || teknisi.length === 0) {
+    return `<td colspan="3">-</td>`;
+  }
+  return teknisi.map(t => `
+    <td>
+      <div class="signature-box"></div>
+      <u>${t.nama}</u>
+    </td>
+  `).join("");
+}
+return `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FORM CHECKLIST PERALATAN DAN PERLENGKAPAN PERSIAPAN PEMELIHARAAN ALOPTAMA</title>
+    <title>Form Pemeliharaan</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            margin: 20px;
-        }
-        .container {
-            width: 800px;
-            margin: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        td {
-            padding: 5px;
-            vertical-align: top;
-        }
-        .header-table td {
-            border: solid;
-        }
-        .centerize {
-            text-orientation: ;
-        }
-        .header-table .logo {
-            width: 100px;
-            text-align: center;
-        }
-        .header-table .title-section {
-            text-align: center;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        .header-table .doc-info {
-            width: 250px;
-        }
-        .main-content-table, .main-content-table th, .main-content-table td {
-            border: 1px solid black;
-        }
-        .main-content-table th {
-            text-align: center;
-            font-weight: bold;
-            background-color: #f2f2f2;
-        }
-        .signature-table {
-            margin-top: 40px;
-            text-align: center;
-        }
-        .signature-table td {
-            border: none;
-            width: 33.33%;
-        }
-        .signature-box {
-            height: 80px;
-            margin-bottom: 5px;
-        }
-        .no-border td {
-            border: none;
-        }
-        .border td{
-            border: none;
-        }
-        .bold {
-            font-weight: bold;
-        }
-        @media print {
-            body {
-                margin: 0;
-            }
-            .container {
-                width: 100%;
-            }
-            button {
-                display: none;
-            }
-        }
+      body { font-family: Arial, sans-serif; margin: 10px; font-size: 14px }
+      .container { max-width: 800px; margin: auto; border: 1px solid #ccc; padding: 10px; }
+      .header { display: flex; justify-content: space-between; }
+      .header img { width: 60px; height: auto; }
+      .header-info { text-align: left; }
+      .title { text-align: center; margin: 5px 0; font-weight: bold; }
+      table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+      td, th { border: 1px solid black; padding: 6px; text-align: center; }
+      th { background-color: #f2f2f2; }
+      .category-row td { background-color: #e9e9e9; text-align: left; font-weight: bold; }
+      .item-name { text-align: left; }
+      .signature-box { height: 80px; }
     </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <img src="https://possaku.store/dev/monitor/images/Logo_BMKG.png" />
+        <div class="title"><h2>DIREKTORAT INSTRUMENTASI DAN KALIBRASI</h2></div>
+        <div class="header-info">
+          <p>
+            No. Dokumen: ${data.dokumen.no}<br>
+            Tanggal terbit: ${data.dokumen.terbit}<br>
+            No. Revisi: ${data.dokumen.revisi}<br>
+            Halaman: ${data.dokumen.halaman}
+          </p>
+        </div>
+      </div>
+
+      <div class="title">
+        <h3>${data.dokumen.judul} ${data.dokumen.sub_judul}</h3>
+      </div>
+
+      <table>
+        <tr><td width="20%"><b>NAMA TIM KERJA</b></td><td width="5%">:</td><td>${data.pekerjaan.nama_tim}</td></tr>
+        <tr><td><b>LOKASI</b></td><td>:</td><td>${data.pekerjaan.lokasi}</td></tr>
+        <tr><td><b>TANGGAL</b></td><td>:</td><td>${data.pekerjaan.tanggal}</td></tr>
+      </table>
+
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2" width="30%">Nama Peralatan</th>
+            <th colspan="2">Operasi (√)</th>
+            <th colspan="2">Kondisi (√)</th>
+            <th rowspan="2">Keterangan</th>
+          </tr>
+          <tr>
+            <th>Normal</th>
+            <th>Tidak Normal</th>
+            <th>Bersih</th>
+            <th>Kotor</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${renderPeralatan(data.peralatan)}
+        </tbody>
+      </table>
+
+      <table>
+        <tr>
+          <td width="50%">Mengetahui,<br>Ketua Tim Kerja Pemeliharaan Aloptama</td>
+          <td width="50%" colspan="3">Teknisi On Duty</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="signature-box">
+              <img src="${data.personil.ketua_tim.ttd_path}" style="height:80px"/>
+            </div>
+            <u>${data.personil.ketua_tim.nama}</u><br>
+            ${data.personil.ketua_tim.nip}
+          </td>
+          ${renderTeknisi(data.personil.teknisi)}
+        </tr>
+      </table>
+    </div>
+  </body>
+  </html>
+  `;
+}
+
+    exportCheckListForm(formData){
+       const rows = [];
+  const maxRows = Math.max(
+    formData.peralatan_sebelum.length,
+    formData.peralatan_sesudah.length
+  );
+
+  for (let i = 0; i < maxRows; i++) {
+    const itemSebelum = formData.peralatan_sebelum[i] || { nama: "", jumlah: "", kondisi: "" };
+    const itemSesudah = formData.peralatan_sesudah[i] || { nama: "", jumlah: "", kondisi: "" };
+
+    rows.push(`
+      <tr>
+        <td style="text-align:center;">${i + 1}</td>
+        <td>${itemSebelum.nama}</td>
+        <td style="text-align:center;">${itemSebelum.jumlah}</td>
+        <td style="text-align:center;">${itemSebelum.kondisi}</td>
+        <td style="text-align:center;">${i + 1}</td>
+        <td>${itemSesudah.nama}</td>
+        <td style="text-align:center;">${itemSesudah.jumlah}</td>
+        <td style="text-align:center;">${itemSesudah.kondisi}</td>
+      </tr>
+    `);
+  }
+
+  const teknisiHtml = formData.teknisi.map(t => `
+    <div style="display:inline-block; width:100px; margin:0 10px;">
+      <div class="signature-box">
+        ${t.ttd_path ? `<img src="${t.ttd_path}" alt="Ttd Teknisi" style="max-height: 80px;">` : ""}
+      </div>
+      <span>${t.nama}</span>
+    </div>
+  `).join("");
+
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Checklist Form</title>
+  <style>
+    body { font-family: Arial, sans-serif; font-size: 12px; margin: 20px; }
+    .container { width: 800px; margin: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    td { padding: 5px; vertical-align: top; }
+    .header-table td { border: solid; }
+    .header-table .title-section { text-align: center; font-weight: bold; font-size: 18px; }
+    .main-content-table, .main-content-table th, .main-content-table td { border: 1px solid black; }
+    .main-content-table th { text-align: center; font-weight: bold; background-color: #f2f2f2; }
+    .signature-table { margin-top: 40px; text-align: center; }
+    .signature-table td { border: none; width: 33.33%; }
+    .signature-box { height: 80px; margin-bottom: 5px; }
+    .bold { font-weight: bold; }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <table class="header-table">
+      <tr>
+        <td><img src="https://possaku.store/dev/monitor/images/Logo_BMKG.png" style="width:90px;"></td>
+        <td class="title-section">DIREKTORAT INSTRUMENTASI DAN KALIBRASI</td>
+        <td>
+          <table>
+            <tr><td>No. Dokumen</td><td>:</td><td>${formData.no_dokumen}</td></tr>
+            <tr><td>Tanggal terbit</td><td>:</td><td>${formData.tanggal_naskah}</td></tr>
+            <tr><td>No. Revisi</td><td>:</td><td>${formData.no_revisi}</td></tr>
+            <tr><td>Halaman</td><td>:</td><td>${formData.halaman}</td></tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3" class="title-section">
+          FORM CHECKLIST PERALATAN DAN PERLENGKAPAN<br>
+          PERSIAPAN PEMELIHARAAN ALOPTAMA
+        </td>
+      </tr>
+    </table>
 
-    <div class="container">
-        <button onclick="window.print()" style="margin-bottom: 20px;">Print Form</button>
+    <br>
+    <table>
+      <tr><td class="bold" style="width:25%;">NAMA TIM KERJA</td><td>: ${formData.nama_tim_kerja}</td></tr>
+      <tr><td class="bold">NAMA ALAT/SENSOR</td><td>: ${formData.nama_alat_sensor}</td></tr>
+      <tr><td class="bold">LOKASI</td><td>: ${formData.lokasi}</td></tr>
+      <tr><td class="bold">TANGGAL</td><td>: ${formData.tanggal_pelaksanaan}</td></tr>
+    </table>
 
-        <table class="header-table">
-            <tr>
-                <td class="logo"><img src="https://possaku.store/dev/monitor/images/Logo_BMKG.png" alt="Logo" style="width:90px;"></td>
-                <td class="title-section"><br><br>
-                    DIREKTORAT INSTRUMENTASI DAN KALIBRASI
-                </td>
-                <td class="doc-info">
-                    <table>
-                        <tr class="border">
-                            <td>No. Dokumen</td>
-                            <td>:</td>
-                            <td id="no_dokumen"></td>
-                        </tr>
-                        <tr class="border">
-                            <td>Tanggal terbit</td>
-                            <td>:</td>
-                            <td id="tanggal_naskah"></td>
-                        </tr>
-                        <tr class="border">
-                            <td>No. Revisi</td>
-                            <td>:</td>
-                            <td id="no_revisi"></td>
-                        </tr>
-                        <tr class="border">
-                            <td>Halaman</td>
-                            <td>:</td>
-                            <td id="halaman"></td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                
-                <td colspan="3" class="title-section">
-                    FORM CHECKLIST PERALATAN DAN PERLENGKAPAN<br>
-                    PERSIAPAN PEMELIHARAAN ALOPTAMA
-                </td>
-            </tr>
-        </table>
+    <p class="bold">PERLENGKAPAN DAN PERALATAN YANG DIBAWA :</p>
+    <table class="main-content-table">
+      <thead>
+        <tr>
+          <th colspan="4">Sebelum (Berangkat)</th>
+          <th colspan="4">Sesudah (Pulang)</th>
+        </tr>
+        <tr>
+          <th>No</th><th>Daftar</th><th>Jumlah</th><th>Kondisi</th>
+          <th>No</th><th>Daftar</th><th>Jumlah</th><th>Kondisi</th>
+        </tr>
+      </thead>
+      <tbody>${rows.join("")}</tbody>
+    </table>
 
-        <br>
-
-        <table>
-            <tr class="no-border">
-                <td style="width:25%;" class="bold">NAMA TIM KERJA</td>
-                <td style="width:75%;">: <span id="nama_tim_kerja"></span></td>
-            </tr>
-            <tr class="no-border">
-                <td class="bold">NAMA ALAT/SENSOR</td>
-                <td>: <span id="nama_alat_sensor"></span></td>
-            </tr>
-            <tr class="no-border">
-                <td class="bold">LOKASI</td>
-                <td>: <span id="lokasi"></span></td>
-            </tr>
-            <tr class="no-border">
-                <td class="bold">TANGGAL</td>
-                <td>: <span id="tanggal_pelaksanaan"></span></td>
-            </tr>
-        </table>
-
-        <br>
-
-        <p class="bold">PERLENGKAPAN DAN PERALATAN YANG DIBAWA :</p>
-
-        <table class="main-content-table">
-            <thead>
-                <tr>
-                    <th colspan="4">Sebelum (Berangkat)</th>
-                    <th colspan="4">Sesudah (Pulang)</th>
-                </tr>
-                <tr>
-                    <th>No</th>
-                    <th>Daftar Sensor dan Peralatan Pendukung yang dibawa<br>(cantumkan serial number jika ada)</th>
-                    <th>Jumlah</th>
-                    <th>Kondisi</th>
-                    <th>No</th>
-                    <th>Daftar Sensor dan Peralatan Pendukung yang dibawa</th>
-                    <th>Jumlah</th>
-                    <th>Kondisi</th>
-                </tr>
-            </thead>
-            <tbody id="equipment_table_body">
-                </tbody>
-        </table>
-
-        <table class="signature-table">
-            <tr>
-                <td>Mengetahui,<br>Ketua Tim Kerja Pemeliharaan<br>Aloptama Geofisika</td>
-                <td></td>
-                <td>Teknisi On Duty</td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="signature-box" id="ttd_ketua"></div>
-                    <span id="nama_ketua"></span><br>
-                    NIP. <span id="nip_ketua"></span>
-                </td>
-                <td></td>
-                <td>
-                    <div id="teknisi_list">
-                        </div>
-                </td>
-            </tr>
-        </table>
-    </div>
-
-    <script>
-        const formData = ${JSON.stringify(data)};
-
-        // Populate header and general info
-        document.getElementById('no_dokumen').textContent = formData.no_dokumen;
-        document.getElementById('tanggal_naskah').textContent = formData.tanggal_naskah;
-        document.getElementById('no_revisi').textContent = formData.no_revisi;
-        document.getElementById('halaman').textContent = formData.halaman;
-        document.getElementById('nama_tim_kerja').textContent = formData.nama_tim_kerja;
-        document.getElementById('nama_alat_sensor').textContent = formData.nama_alat_sensor;
-        document.getElementById('lokasi').textContent = formData.lokasi;
-        document.getElementById('tanggal_pelaksanaan').textContent = formData.tanggal_pelaksanaan;
-
-        // Populate equipment table
-        const tableBody = document.getElementById('equipment_table_body');
-        const maxRows = Math.max(formData.peralatan_sebelum.length, formData.peralatan_sesudah.length);
-
-        for (let i = 0; i < maxRows; i++) {
-            const row = document.createElement('tr');
-            const itemSebelum = formData.peralatan_sebelum[i] || { nama: '', jumlah: '', kondisi: '' };
-            const itemSesudah = formData.peralatan_sesudah[i] || { nama: '', jumlah: '', kondisi: '' };
-            
-            row.innerHTML = '
-                <td style="text-align:center;">${i + 1}</td>
-                <td>${itemSebelum.nama}</td>
-                <td style="text-align:center;">${itemSebelum.jumlah}</td>
-                <td style="text-align:center;">${itemSebelum.kondisi}</td>
-                <td style="text-align:center;">${i + 1}</td>
-                <td>${itemSesudah.nama}</td>
-                <td style="text-align:center;">${itemSesudah.jumlah}</td>
-                <td style="text-align:center;">${itemSesudah.kondisi}</td>
-            ';
-            tableBody.appendChild(row);
-        }
-
-        // Populate signatures
-        document.getElementById('nama_ketua').textContent = formData.ketua_tim.nama;
-        document.getElementById('nip_ketua').textContent = formData.ketua_tim.nip;
-        if (formData.ketua_tim.ttd_path) {
-            document.getElementById('ttd_ketua').innerHTML = '<img src="${formData.ketua_tim.ttd_path}" alt="Ttd Ketua" style="max-height: 80px;">';
-        }
-
-        const teknisiContainer = document.getElementById('teknisi_list');
-        formData.teknisi.forEach(teknisi => {
-            const teknisiDiv = document.createElement('div');
-            teknisiDiv.style = "display: inline-block; width: 100px; margin: 0 10px;";
-            
-            let ttdImage = '';
-            if (teknisi.ttd_path) {
-                ttdImage = '<img src="${teknisi.ttd_path}" alt="Ttd Teknisi" style="max-height: 80px;">';
-            }
-
-            teknisiDiv.innerHTML = '
-                <div class="signature-box">${ttdImage}</div>
-                <span>${teknisi.nama}</span>
-            ';
-            teknisiContainer.appendChild(teknisiDiv);
-        });
-    </script>
+    <table class="signature-table">
+      <tr>
+        <td>Mengetahui,<br>Ketua Tim</td><td></td><td>Teknisi On Duty</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="signature-box">
+            ${formData.ketua_tim.ttd_path ? `<img src="${formData.ketua_tim.ttd_path}" style="max-height:80px;">` : ""}
+          </div>
+          ${formData.ketua_tim.nama}<br>
+          NIP. ${formData.ketua_tim.nip}
+        </td>
+        <td></td>
+        <td>${teknisiHtml}</td>
+      </tr>
+    </table>
+  </div>
 </body>
-</html> `
-return html;
-    }
+</html>
+  `;
+}
 
     exportIdentifikasiForm(data, user) {
         var html = `<!DOCTYPE html>

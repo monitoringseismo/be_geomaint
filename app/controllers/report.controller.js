@@ -92,7 +92,7 @@ class ReportController {
             var id = req.params.id;
             console.log("Generating PDF for report ID:", id);
             const reportData = await report.findOne({_id:new ObjectId(id)});
-            console.log("Report Data:", reportData);
+            // console.log("Report Data:", JSON.stringify(reportData));
             if (!reportData) {
                 res.status(404).send({ success: false, error: 'Report not found' });
                 return;
@@ -115,7 +115,7 @@ class ReportController {
                     break;
             }
             // const pdf = await report.pdf(id);
-            console.log(html)
+            // console.log(html)
             var file = { content: html };
                         var options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox'], timeout: 600000, waitUntil: 'networkidle0', preferCSSPageSize: true, puppeteerArgs: { headless: true } };
                         html_to_pdf.generatePdf(file, options).then(pdfBuffer => {
@@ -123,6 +123,8 @@ class ReportController {
                             'Content-Type': 'application/pdf',
                             'Content-Disposition': `attachment; filename=report_${id}.pdf`
                             });
+                            res.setHeader('Content-Type', 'application/pdf');
+                            res.setHeader('Content-Disposition', `attachment; filename=report_${id}.pdf`);
                             res.send(pdfBuffer);
                         });
         }  catch (error) {
