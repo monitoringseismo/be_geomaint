@@ -3,11 +3,13 @@ const MetadataCon = require('../app/controllers/metadata.controller')
 const PpmCon = require('../app/controllers/ppm.controller')
 const LkCon = require('../app/controllers/lk.controller')
 const ReportCon = require('../app/controllers/report.controller')
+const OfficerCon = require('../app/controllers/officer.controller')
 const user = new UserCon()
 const metadata = new MetadataCon()
 const ppm = new PpmCon()
 const lk = new LkCon()
 const report = new ReportCon()
+const officer = new OfficerCon()
 
 const multer = require("multer");
 const imagehelper = require("../app/helpers/images.helper")
@@ -67,4 +69,5 @@ module.exports.route = (app) => {
     app.get('/openapi/report/pdf/:id', report.pdf);
     app.get('/openapi/report/pdf2/:id', report.pdf2);
     app.post('/openapi/uploadImage', multer({ storage: imagehelper.diskStorage }).single("photo"), ppm.upImg);
+    app.post('/openapi/officer/list',  officer.list);
 }

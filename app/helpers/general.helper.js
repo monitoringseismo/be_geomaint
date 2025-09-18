@@ -82,7 +82,183 @@ class Helpers {
             $lte: endDate
         }
     }
+    exportInaTEWS(data){
+      return `<!DOCTYPE html>
+       <header>
+                    <table>
+                        <tr>
+                            <td><img src="https://api.geomaint.com/images/Logo_BMKG.png"/></td>
+                            <td>
+                                <h2>BADAN METEOROLOGI, KLIMATOLOGI, DAN GEOFISIKA</h2>
+                                <p>Jl. Angkasa I No. 2, Kemayoran, Jakarta 10720, Telp : (021) 4246321 Fax : (021) 4246703</p>
+                                <p>P. O. BOX 3540 Jkt, Website : http://www.bmkg.go.id Email : info@bmkg.go.id</p>
+                            </td>
+                        </tr>
+                    </table>
+                </header>
 
+                <div class="section" style="text-align:center;">
+                    <h2>${data.reportTitle}</h2>
+                </div>
+
+                <div class="section">
+                    <h3>I. UMUM</h3>
+                    <table class="key-value-table">
+                        ${Object.entries(data.siteInfo).map(([key, value]) => `<tr><td>${key}</td><td>${value}</td></tr>`).join('')}
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h3>II. DASAR PELAKSANAAN</h3>
+                    <ul>
+                        ${data.basisPelaksanaan.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="section">
+                    <h3>PELAKSANA KEGIATAN</h3>
+                     <table class="key-value-table">
+                        ${Object.entries(data.lokasiKegiatan).map(([key, value]) => `<tr><td>${key}</td><td>${value}</td></tr>`).join('')}
+                    </table>
+                    <br/>
+                    <h4>Tim Pelaksana:</h4>
+                    <table>
+                        <thead><tr><th>Nama</th><th>NIP</th><th>Pangkat/Golongan</th><th>Jabatan</th></tr></thead>
+                        <tbody>
+                            ${data.pelaksana.map(p => `<tr><td>${p.Nama}</td><td>${p.NIP}</td><td>${p.PangkatGolongan}</td><td>${p.Jabatan}</td></tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h3>III. URAIAN PELAKSANAAN KEGIATAN</h3>
+                    <h4>Peralatan</h4>
+                    <table>
+                        <thead><tr><th>Alat</th><th>Sebelum Pemeliharaan</th><th>Sesudah Pemeliharaan</th></tr></thead>
+                        <tbody>
+                            ${data.peralatan.map(item => `<tr><td>${item.Alat}</td><td>${item.Sebelum}</td><td>${item.Sesudah}</td></tr>`).join('')}
+                        </tbody>
+                    </table>
+                    <h4>Kondisi Awal</h4>
+                    <p>${data.kondisiAwal}</p>
+                    <h4>Tindakan Pemeliharaan</h4>
+                    <ul>
+                        ${data.tindakanPemeliharaan.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    <h4>Hasil Pemeliharaan</h4>
+                    <p>${data.hasilPemeliharaan}</p>
+                </div>
+                
+                <div class="section">
+                    <h3>IV. KESIMPULAN DAN SARAN</h3>
+                    <h4>Kesimpulan</h4>
+                    <p>${data.kesimpulan}</p>
+                    <h4>Saran</h4>
+                    <p>${data.saran}</p>
+                </div>
+                <div class="section">
+                         <table class="signature-table">
+                        <tr>
+                            <td>
+                                <p>PIHAK KEDUA</p>
+                                <p>${data.lampiran.serahTerimaBarang.pihakKedua.jabatan}</p>
+                                <div class="signature-block"></div>
+                                <p><strong>${data.lampiran.serahTerimaBarang.pihakKedua.nama}</strong></p>
+                                <p>NIP. ${data.lampiran.serahTerimaBarang.pihakKedua.nip}</p>
+                            </td>
+                            <td>
+                                <p>PIHAK PERTAMA</p>
+                                <p>${data.lampiran.serahTerimaBarang.pihakPertama.jabatan}</p>
+                                <div class="signature-block"></div>
+                                <p><strong>${data.lampiran.serahTerimaBarang.pihakPertama.nama}</strong></p>
+                                <p>NIP. ${data.lampiran.serahTerimaBarang.pihakPertama.nip}</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h3>LAMPIRAN</h3>
+
+                    <h4>Lampiran 1: Dokumentasi Kegiatan</h4>
+                         <table class="key-value-table">
+                        ${Object.entries(data.lampiran.dokumentasiKegiatan).map(dk => `<tr><td>${dk[1].keterangan}</td><td><img src="${dk[1].foto}"></td></tr>`).join("")}
+                    </table>
+            
+                    <h4>Lampiran 2: Laporan Monitoring Seedlink</h4>
+                    
+                    <img src="${data.lampiran.seedlinkMonitor}"/>
+
+                    <h4>Lampiran 3: SPB/BAP/BAST</h4>
+                    <img src="${data.lampiran.serahTerimaBarang.foto}"/>
+                    <p>
+                            Demikian Serah Terima Barang suku cadang sistem observasi gempabumi inatew ini kami selenggarakan dengan seksama dan dalam keadaan sebenarnya pada hari dan tanggal tersebut di atas untuk dipergunakan sebagaimana perlunya. Berita Acara Serah Terima ini akan ditinjau kembali apabila dikemudian hari ternyata terdapat kekeliruan.
+                    </p>
+                             <table class="signature-table">
+                        <tr>
+                            <td>
+                                <p>PIHAK KEDUA</p>
+                                <p>${data.lampiran.serahTerimaBarang.pihakKedua.jabatan}</p>
+                                <div class="signature-block"></div>
+                                <p><strong>${data.lampiran.serahTerimaBarang.pihakKedua.nama}</strong></p>
+                                <p>NIP. ${data.lampiran.serahTerimaBarang.pihakKedua.nip}</p>
+                            </td>
+                            <td>
+                                <p>PIHAK PERTAMA</p>
+                                <p>${data.lampiran.serahTerimaBarang.pihakPertama.jabatan}</p>
+                                <div class="signature-block"></div>
+                                <p><strong>${data.lampiran.serahTerimaBarang.pihakPertama.nama}</strong></p>
+                                <p>NIP. ${data.lampiran.serahTerimaBarang.pihakPertama.nip}</p>
+                            </td>
+                        </tr>
+                    </table>
+                    <p><strong>Lampiran</strong></p>
+                     <p><strong> Berita Acara Serah Terima Barang</strong><br/>
+                     <strong>Nomor:</strong> ${data.lampiran.serahTerimaBarang.nomor}<br/>
+                     <strong>Tanggal:</strong> ${data.lampiran.serahTerimaBarang.tanggal}</p>
+                    <table>
+                        <thead><tr><th>No</th><th>Nama Barang</th><th>Merk</th><th>Type</th><th>Serial Number</th><th>Site</th><th>Jumlah</th><th>Tahun</th></tr></thead>
+                        <tbody>
+                            ${data.lampiran.serahTerimaBarang.items.map(item => `
+                                <tr>
+                                    <td>${item.no}</td>
+                                    <td>${item.nama}</td>
+                                    <td>${item.merk}</td>
+                                    <td>${item.type}</td>
+                                    <td>${item.serial}</td>
+                                    <td>${item.site}</td>
+                                    <td>${item.jumlah}</td>
+                                    <td>${item.tahun}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+
+                         <table class="signature-table">
+                        <tr>
+                            <td>
+                                <p>PIHAK KEDUA</p>
+                                <p>${data.lampiran.serahTerimaBarang.pihakKedua.jabatan}</p>
+                                <div class="signature-block"></div>
+                                <p><strong>${data.lampiran.serahTerimaBarang.pihakKedua.nama}</strong></p>
+                                <p>NIP. ${data.lampiran.serahTerimaBarang.pihakKedua.nip}</p>
+                            </td>
+                            <td>
+                                <p>PIHAK PERTAMA</p>
+                                <p>${data.lampiran.serahTerimaBarang.pihakPertama.jabatan}</p>
+                                <div class="signature-block"></div>
+                                <p><strong>${data.lampiran.serahTerimaBarang.pihakPertama.nama}</strong></p>
+                                <p>NIP. ${data.lampiran.serahTerimaBarang.pihakPertama.nip}</p>
+                            </td>
+                        </tr>
+                    </table>
+                 <img src="${data.lampiran.serahTerimaBarang.fotoDocSerahTerima}"/>
+                <p><center><strong>LAMPIRAN FOTO SUKU CADANG INA-TEWS YANG DIPASANG</strong></center></p>
+                <img src="${data.lampiran.serahTerimaBarang.fotoPasangSukuCadang}"/>
+                </div>
+                </html>
+      `
+    }
     exportPemeliharaanForm(data){
       function renderPeralatan(peralatan) {
   let rows = "";
