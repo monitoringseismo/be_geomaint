@@ -112,6 +112,7 @@ class ReportController {
                     html = help.exportPemeliharaanForm(reportData);
                     break;
                 default:
+                    html = help.exportInaTEWS(reportData);
                     break;
             }
             // const pdf = await report.pdf(id);

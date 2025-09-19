@@ -84,6 +84,113 @@ class Helpers {
     }
     exportInaTEWS(data){
       return `<!DOCTYPE html>
+       <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Pemeliharaan InaTEWS - DBKI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        header, .section {
+            margin-bottom: 20px;
+        }
+        header {
+/*            text-align: center;*/
+            border-bottom: 3px solid black;
+            padding-bottom: 10px;
+        }
+        header img {
+            width: 100px;
+        }
+        header h1, header p {
+            margin: 5px 0;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        h2 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .key-value-table td:first-child {
+            font-weight: bold;
+            width: 30%;
+        }
+        .signature-table {
+            border: none;
+            margin-top: 40px;
+        }
+        .signature-table td {
+            border: none;
+            text-align: center;
+            width: 50%;
+        }
+        .signature-block {
+            height: 100px; 
+        }
+        .print-button {
+            display: block;
+            width: 150px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .image-gallery div {
+            flex: 1 1 200px;
+            text-align: center;
+        }
+        .image-gallery img {
+            max-width: 100%;
+            border: 1px solid #ccc;
+        }
+        .seedlink-ok {
+             background-color: #90ee90; /* Light Green */
+        }
+        .seedlink-na {
+            background-color: #333;
+            color: white;
+        }
+
+        @media print {
+            .print-button {
+                display: none;
+            }
+            body {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+  <body>
        <header>
                     <table>
                         <tr>
@@ -187,10 +294,10 @@ class Helpers {
             
                     <h4>Lampiran 2: Laporan Monitoring Seedlink</h4>
                     
-                    <img src="${data.lampiran.seedlinkMonitor}"/>
+                    <img src="${process.env.BASE_URL}${data.lampiran.seedlinkMonitor}"/>
 
                     <h4>Lampiran 3: SPB/BAP/BAST</h4>
-                    <img src="${data.lampiran.serahTerimaBarang.foto}"/>
+                    <img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.foto}"/>
                     <p>
                             Demikian Serah Terima Barang suku cadang sistem observasi gempabumi inatew ini kami selenggarakan dengan seksama dan dalam keadaan sebenarnya pada hari dan tanggal tersebut di atas untuk dipergunakan sebagaimana perlunya. Berita Acara Serah Terima ini akan ditinjau kembali apabila dikemudian hari ternyata terdapat kekeliruan.
                     </p>
@@ -252,12 +359,13 @@ class Helpers {
                             </td>
                         </tr>
                     </table>
-                 <img src="${data.lampiran.serahTerimaBarang.fotoDocSerahTerima}"/>
+                 <img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.fotoDocSerahTerima}"/>
                 <p><center><strong>LAMPIRAN FOTO SUKU CADANG INA-TEWS YANG DIPASANG</strong></center></p>
-                <img src="${data.lampiran.serahTerimaBarang.fotoPasangSukuCadang}"/>
+                <img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.fotoPasangSukuCadang}"/>
                 </div>
-                </html>
-      `
+            </body>
+        </html>
+      `;
     }
     exportPemeliharaanForm(data){
       function renderPeralatan(peralatan) {
@@ -294,8 +402,6 @@ function renderTeknisi(teknisi) {
 }
 return `
   <!DOCTYPE html>
-  <html lang="en">
-  <head>
     <meta charset="UTF-8">
     <title>Form Pemeliharaan</title>
     <style>
