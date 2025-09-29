@@ -1,23 +1,20 @@
 const LkModel = require('../models/lk.model')
-const SessionModel = require('../models/session.model')
 const Helpers = require('../helpers/general.helper')
 const help = new Helpers()
 const lk = new LkModel()
-const session = new SessionModel()
 const {ObjectId} = require('mongodb')
 const axios = require('axios');
 require("core-js/actual/array/group-by");
-var message, data
 class LkController{
     async insert(req, res){
         try {
-            data = req.body;
+            var data = req.body;
             data.status = 0
             const lkData = await lk.insert(data);
-            message = {success: true, lk: lkData};
+            var message = {success: true, lk: lkData};
             res.status(200).send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -26,15 +23,15 @@ class LkController{
 
     async show(req, res){
         try {
-            data = req.params;
+            var data = req.params;
             const lkData = await lk.show(data.id);
             if (lkData) {
                 lkData.status = help.statusLK(lkData.status)
             }
-            message = {success: true, data: lkData};
+            var message = {success: true, data: lkData};
             res.status(200).send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -44,16 +41,16 @@ class LkController{
 
     async list(req, res){
         try {
-            data = req.body
+            var data = req.body
             var listlk = await lk.list(data.filter, data.sort, data.limit);
             listlk.map((lk)=>{
                 lk.status = help.statusLK(lk.status)
             })
-            message = {success:true, data:listlk};
+            var message = {success:true, data:listlk};
             res.status(200);
             res.send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -71,11 +68,11 @@ class LkController{
                 "Dikirim" : mapLK["3"] || [],
                 "Dibatalkan" : mapLK["4"] || []
             }
-            message = {success:true, data:mp};
+            var message = {success:true, data:mp};
             res.status(200);
             res.send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -84,7 +81,7 @@ class LkController{
 
     async statistikLK(req, res){
         try {
-            data = req.body
+            // var data = req.body
             const listlk = await lk.statistik();
             var a = 0,b = 0,c=0,d=0,e=0
             listlk.forEach(stat => {
@@ -116,11 +113,11 @@ class LkController{
                 "Dikirim":d,
                 "Dibatalkan":e
             }
-            message = {success:true, data:dt};
+            var message = {success:true, data:dt};
             res.status(200);
             res.send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -129,18 +126,18 @@ class LkController{
 
     async update(req, res){
         try {
-            data = req.body
+            var data = req.body
             var upd = {$set : data};
             var id = req.params.id;
             var update = await lk.update({_id:new ObjectId(id)},upd);
             if (update) {
                 update.status = help.statusLK(update.status)
             }
-            message = {success:true, data:update};
+            var message = {success:true, data:update};
             res.status(200);
             res.send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -149,13 +146,13 @@ class LkController{
 
     async delete(req, res){
         try {
-            data = req.params
+            var data = req.params
             const deletelk = await lk.delete(data.id);
-            message = {success:true, data:deletelk};
+            var message = {success:true, data:deletelk};
             res.status(200);
             res.send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -169,7 +166,7 @@ class LkController{
             res.status(200);
             res.send(call.data);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);

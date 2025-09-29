@@ -4,12 +4,14 @@ const PpmCon = require('../app/controllers/ppm.controller')
 const LkCon = require('../app/controllers/lk.controller')
 const ReportCon = require('../app/controllers/report.controller')
 const OfficerCon = require('../app/controllers/officer.controller')
+const SC = require('../app/controllers/sukucadang.controller')
 const user = new UserCon()
 const metadata = new MetadataCon()
 const ppm = new PpmCon()
 const lk = new LkCon()
 const report = new ReportCon()
 const officer = new OfficerCon()
+const sc = new SC()
 
 const multer = require("multer");
 const imagehelper = require("../app/helpers/images.helper")
@@ -70,4 +72,13 @@ module.exports.route = (app) => {
     app.get('/openapi/report/pdf2/:id', report.pdf2);
     app.post('/openapi/uploadImage', multer({ storage: imagehelper.diskStorage }).single("photo"), ppm.upImg);
     app.post('/openapi/officer/list',  officer.list);
+
+    //-- suku cadang ---//
+    app.post('/sukucadang/', user.checkSessionApi , sc.insert);
+    app.put('/sukucadang/:id', user.checkSessionApi , sc.update);
+    app.get('/sukucadang/:id', user.checkSessionApi , sc.show);
+    app.delete('/sukucadang/:id', user.checkSessionApi , sc.delete);
+    app.post('/sukucadang/list', user.checkSessionApi , sc.list);
+    app.post('/sukucadang_activity/history/:id', user.checkSessionApi , sc.historySukuCadang);
+    
 }
