@@ -54,6 +54,24 @@ class SkController{
         }
     }
 
+    async historySukuCadang(req, res){
+        try {
+            var data = req.body
+            var listSukuCadang = await sukuCadang.list(data.filter, data.sort, data.limit);
+            // listSukuCadang.map((sukuCadang)=>{
+            //     sukuCadang.status = help.statusLK(sukuCadang.status)
+            // })
+            var message = {success:true, data:listSukuCadang};
+            res.status(200);
+            res.send(message);
+        } catch (error) {
+            var message = {success:false, error: error.message};
+            // await help.pushTelegram(req, error.message);
+            res.status(500);
+            res.send(message);
+        }
+    }
+
     async update(req, res){
         try {
             var data = req.body

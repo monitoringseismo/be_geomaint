@@ -74,11 +74,11 @@ module.exports.route = (app) => {
     app.post('/openapi/officer/list',  officer.list);
 
     //-- suku cadang ---//
-    app.post('/sukucadang/', user.checkSessionApi , sc.insert);
-    app.put('/sukucadang/:id', user.checkSessionApi , sc.update);
-    app.get('/sukucadang/:id', user.checkSessionApi , sc.show);
-    app.delete('/sukucadang/:id', user.checkSessionApi , sc.delete);
-    app.post('/sukucadang/list', user.checkSessionApi , sc.list);
-    app.post('/sukucadang_activity/history/:id', user.checkSessionApi , sc.historySukuCadang);
+    app.post('/sukucadang/',  sc.insert);
+    app.put('/sukucadang/:id',  sc.update);
+    app.get('/sukucadang/:id',  sc.show);
+    app.delete('/sukucadang/:id',  sc.delete);
+    app.post('/sukucadang/list',  sc.list);
+    app.post('/sukucadang_activity/history/:id',  sc.historySukuCadang);
     
 }
