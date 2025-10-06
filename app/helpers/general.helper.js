@@ -60,6 +60,7 @@ class Helpers {
     }
     mappingUser(user) {
         var dt = {
+            id: user._id,
             kode: user.kode,
             nama: user.nama,
             role: user.role,
