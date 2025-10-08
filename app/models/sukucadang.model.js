@@ -203,59 +203,79 @@ class SC {
     //     return result.toArray();
     // }
     async historySukuCadang(filter, sort, limit = 0) {
-  const db = await this.getInstance();
-  filter.deleted_at = { $exists: false };
+        const db = await this.getInstance();
+        filter.deleted_at = { $exists: false };
+        // pipeline dasar
+        const pipeline = [
+            {
+            $addFields: {
+                sukucadang_objId: {
+                $convert: {
+                    input: "$suku_cadang_id",
+                    to: "objectId",
+                    onError: null,
+                    onNull: null
+                }
+                },
+                user_objId: {
+                $convert: {
+                    input: "$user_id",
+                    to: "objectId",
+                    onError: null,
+                    onNull: null
+                }
+                },
+                metadata_objId: {
+                $convert: {
+                    input: "$metadata_id",
+                    to: "objectId",
+                    onError: null,
+                    onNull: null
+                }
+                }
+            }
+            },
+            { $match: filter },
+            {
+            $lookup: {
+                from: "suku_cadang",
+                localField: "sukucadang_objId",
+                foreignField: "_id",
+                as: "suku_cadang"
+            }
+            },
+            {
+            $lookup: {
+                from: "officer",
+                localField: "user_objId",
+                foreignField: "_id",
+                as: "officer"
+            }
+            },
+            {
+            $lookup: {
+                from: "metadata",
+                localField: "metadata_objId",
+                foreignField: "_id",
+                as: "stasiun"
+            }
+            },
+            {
+            $unwind: {
+                path: "$suku_cadang",
+                preserveNullAndEmptyArrays: true
+            }
+            },
+            { $sort: sort }
+        ];
 
-  // pipeline dasar
-  const pipeline = [
-    {
-      $addFields: {
-        sukucadang_objId: { $toObjectId: "$suku_cadang_id" },
-        user_objId: { $toObjectId: "$user_id" },
-        metadata_objId: { $toObjectId: "$metadata_id" }
-      }
-    },
-    { $match: filter },
-    {
-      $lookup: {
-        from: "suku_cadang",
-        localField: "sukucadang_objId",
-        foreignField: "_id",
-        as: "suku_cadang"
-      }
-    },
-    {
-      $lookup: {
-        from: "officer",
-        localField: "user_objId",
-        foreignField: "_id",
-        as: "officer"
-      }
-    },
-    {
-      $lookup: {
-        from: "metadata",
-        localField: "metadata_objId",
-        foreignField: "_id",
-        as: "stasiun"
-      }
-    },
-    {
-      $unwind: {
-        path: "$suku_cadang",
-        preserveNullAndEmptyArrays: true
-      }
-    },
-    { $sort: sort }
-  ];
-
-  // tambahin limit kalau ada
-  if (limit > 0) {
-    pipeline.push({ $limit: limit });
-  }
-
-  // langsung return hasil
-  return db.collection("history_suku_cadang").aggregate(pipeline).toArray();
+        // tambahin limit kalau ada
+        if (limit > 0) {
+            pipeline.push({ $limit: limit });
+        }
+        
+        // langsung return hasil
+        return db.collection("history_suku_cadang").aggregate(pipeline).toArray();
 }   
 
 async rekapSukuCadangActivity(startDate, endDate){
