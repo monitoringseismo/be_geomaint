@@ -1,6 +1,6 @@
 const SukuCadangModel = require('../models/sukucadang.model')
-const Helpers = require('../helpers/general.helper')
-const help = new Helpers()
+// const Helpers = require('../helpers/general.helper')
+// const help = new Helpers()
 const sukuCadang = new SukuCadangModel()
 const {ObjectId} = require('mongodb')
 const axios = require('axios');
@@ -116,6 +116,41 @@ class SkController{
             //     sukuCadang.status = help.statusLK(sukuCadang.status)
             // })
             var message = {success:true, data:{listSukuCadang, suku_cadang: skcd}};
+            res.status(200);
+            res.send(message);
+        } catch (error) {
+            var message = {success:false, error: error.message};
+            // await help.pushTelegram(req, error.message);
+            res.status(500);
+            res.send(message);
+        }
+    }
+
+    async listHistorySukuCadang(req, res){
+        try {
+            var data = req.body
+            if(data?.filter?.startDate && data?.filter?.endDate){
+                data.filter.created_at = {
+                    $gte: new Date(data.filter.startDate),
+                    $lte: new Date(data.filter.endDate  )
+                }
+                delete data.filter.startDate
+                delete data.filter.endDate
+            }
+            if (data?.id) {
+                data.filter = {...data.filter, suku_cadang_id: data.id}
+                delete data.id
+            }
+            // console.log(data.filter);
+            // var skcd = await sukuCadang.show(id);
+            // if (!skcd) {
+            //     throw new Error('Suku cadang tidak ditemukan');
+            // }
+            var listSukuCadang = await sukuCadang.historySukuCadang(data.filter, data.sort, data.limit);
+            // listSukuCadang.map((sukuCadang)=>{
+            //     sukuCadang.status = help.statusLK(sukuCadang.status)
+            // })
+            var message = {success:true, data:{listSukuCadang}};
             res.status(200);
             res.send(message);
         } catch (error) {

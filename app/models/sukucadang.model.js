@@ -235,7 +235,6 @@ class SC {
                 }
             }
             },
-            { $match: filter },
             {
             $lookup: {
                 from: "suku_cadang",
@@ -266,6 +265,7 @@ class SC {
                 preserveNullAndEmptyArrays: true
             }
             },
+            { $match: filter },
             { $sort: sort }
         ];
 

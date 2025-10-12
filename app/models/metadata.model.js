@@ -106,6 +106,12 @@ class Metadata {
         return result;
     }
 
+    async findOne(filter, projection = {}){
+        const db = await this.getInstance();    
+        const result = await db.collection('metadata').findOne(filter, { projection });
+        return result;
+    }
+
     async update(id, upd){
         const db = await this.getInstance();
         id.deleted_at = {$exists:false}

@@ -1,6 +1,10 @@
 const crypto = require('crypto');
 const puppeteer = require('puppeteer');
 var html_to_pdf = require('html-pdf-node');
+const Metadata = require('../models/metadata.model');   
+const metadata = new Metadata();
+const SkController = require('../controllers/sukucadang.controller');
+const skController = new SkController();
 
 class Helpers {
     encryptText(text) {
@@ -19,6 +23,36 @@ class Helpers {
             return pdfBuffer;
         });
         // return null; // Return null as the function is async and we handle the promise in the calling function
+    }
+
+    async sendInventoryOutbound(data) {
+        try {
+            var mtdtId = await metadata.findOne({kode: data.siteInfo.kode}, {projection: {_id: 1}});
+            data.lampiran.serahTerimaBarang.items.forEach(item => {
+                const mockReq = {
+                    body: {
+                        "suku_cadang_id": item.id,
+                        "jenis": "outbound",
+                        "qty": Number(item.jumlah),
+                        "referensi": data.basisPelaksanaan[0],
+                        "keterangan": data.reportTitle,
+                        "metadata_id": mtdtId._id.toString(),
+                        "transaction_date": new Date(),
+                        "user_id": "",
+                    }
+                };
+                const mockRes = {
+                    status: (code) => ({
+                        send: (message) => {
+                            console.log(`Status: ${code}, Message: ${JSON.stringify(message)}`);
+                        }
+                    }),
+                };
+                skController.outboundSukuCadang(mockReq, mockRes);
+            });
+        } catch (error) {
+            return error.message;
+        }
     }
 
     async generatePdf(html) {

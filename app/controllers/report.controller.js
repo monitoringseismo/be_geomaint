@@ -24,6 +24,9 @@ class ReportController {
     async insert(req, res){
         try {
             data = req.body;
+            if (data.type === 'korektif_form') {
+                
+            }
             const userData = await report.insert(data);
             message = {success: true, user: help.mappingUser(userData)};
             res.status(200).send(message);

@@ -80,6 +80,7 @@ module.exports.route = (app) => {
     app.delete('/sukucadang/:id',  sc.delete);
     app.post('/sukucadang/list',  sc.list);
     app.post('/sukucadang_activity/history/:id',  sc.historySukuCadang);
+    app.post('/sukucadang_activity/list',  sc.listHistorySukuCadang);
     app.post('/sukucadang_activity/inbound',  sc.inboundSukuCadang);
     app.post('/sukucadang_activity/outbound',  sc.outboundSukuCadang);
     app.post('/sukucadang_activity/rekap',  sc.rekapSukuCadang);
