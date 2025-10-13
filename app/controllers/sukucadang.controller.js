@@ -4,6 +4,10 @@ const SukuCadangModel = require('../models/sukucadang.model')
 const sukuCadang = new SukuCadangModel()
 const {ObjectId} = require('mongodb')
 const axios = require('axios');
+const XLSX = require('xlsx');
+const fs = require('fs');
+const MetadataModel = require('../models/metadata.model')
+const metadata = new MetadataModel()
 require("core-js/actual/array/group-by");
 class SkController{
     async insert(req, res){
@@ -161,74 +165,78 @@ class SkController{
         }
     }
 
-    async inboundSukuCadang(req, res){
+    async _inboundSukuCadang(data) {
+        data.type = 'inbound'
+        data.created_at = new Date();
+        const checkSukuCadang = await sukuCadang.show(data.suku_cadang_id);
+        if (!checkSukuCadang) {
+            throw new Error('Suku cadang tidak ditemukan');
+        }
+        if (!data.quantity || data.quantity <= 0) {
+            throw new Error('Qty harus lebih dari 0');
+        }
+        if (data.transaction_date) {
+            data.transaction_date = new Date(data.transaction_date)
+        } else {
+            data.transaction_date = new Date()
+        }
+        const sukuCadangData = await sukuCadang.addHistorySukuCadang(data);
+        if (sukuCadangData) {
+            var filter = { _id: new ObjectId(data.suku_cadang_id) }
+            var upd = { $inc: { quantity: data.quantity }, $set: { updated_at: new Date() } }
+            await sukuCadang.update(filter, upd);
+        }
+        const show = await sukuCadang.showSukuCadangActivity(sukuCadangData.insertedId);
+        return { success: true, sukuCadang: sukuCadangData, history: show };
+    }
+
+    async inboundSukuCadang(req, res) {
         try {
-            var data = req.body;
-            data.type = 'inbound'
-            data.created_at = new Date();
-            const checkSukuCadang = await sukuCadang.show(data.suku_cadang_id);
-            if (!checkSukuCadang) {
-                throw new Error('Suku cadang tidak ditemukan');
-            }
-            if (!data.qty || data.qty <= 0) {
-                throw new Error('Qty harus lebih dari 0');
-            }
-            if(data.transaction_date){
-                data.transaction_date = new Date(data.transaction_date)
-            } else {
-                data.transaction_date = new Date()
-            }
-            const sukuCadangData = await sukuCadang.addHistorySukuCadang(data);
-            if (sukuCadangData) {
-                var filter = {_id:new ObjectId(data.suku_cadang_id)}
-                var upd = {$inc : {quantity: data.qty}, $set: {updated_at: new Date()}}
-                const update = await sukuCadang.update(filter, upd);
-            }
-            const show = await sukuCadang.showSukuCadangActivity(sukuCadangData.insertedId);
-            var message = {success: true, sukuCadang: sukuCadangData, history: show};
-            res.status(200).send(message);
+            const result = await this._inboundSukuCadang(req.body);
+            res.status(200).send(result);
         } catch (error) {
-            var message = {success:false, error: error.message};
+            var message = { success: false, error: error.message };
             // await help.pushTelegram(req, error.message);
-            res.status(500);
-            res.send(message);
+            res.status(500).send(message);
         }
     }
 
-    async outboundSukuCadang(req, res){
+    async _outboundSukuCadang(data) {
+        data.type = 'outbound'
+        data.created_at = new Date();
+        const checkSukuCadang = await sukuCadang.show(data.suku_cadang_id);
+        if (!checkSukuCadang) {
+            throw new Error('Suku cadang tidak ditemukan');
+        }
+        if (!data.quantity || data.quantity <= 0) {
+            throw new Error('Qty harus lebih dari 0');
+        }
+        if (data.quantity > checkSukuCadang.quantity) {
+            throw new Error('Qty melebihi stok yang ada');
+        }
+        if (data.transaction_date) {
+            data.transaction_date = new Date(data.transaction_date)
+        } else {
+            data.transaction_date = new Date()
+        }
+        const sukuCadangData = await sukuCadang.addHistorySukuCadang(data);
+        if (sukuCadangData) {
+            var filter = { _id: new ObjectId(data.suku_cadang_id) }
+            var upd = { $inc: { quantity: -data.quantity }, $set: { updated_at: new Date() } }
+            await sukuCadang.update(filter, upd);
+        }
+        const show = await sukuCadang.showSukuCadangActivity(sukuCadangData.insertedId);
+        return { success: true, data: show };
+    }
+
+    async outboundSukuCadang(req, res) {
         try {
-            var data = req.body;
-            data.type = 'outbound'
-            data.created_at = new Date();
-            const checkSukuCadang = await sukuCadang.show(data.suku_cadang_id);
-            if (!checkSukuCadang) {
-                throw new Error('Suku cadang tidak ditemukan');
-            }
-            if (!data.qty || data.qty <= 0) {
-                throw new Error('Qty harus lebih dari 0');
-            }
-            if(data.qty > checkSukuCadang.quantity){
-                throw new Error('Qty melebihi stok yang ada');
-            }
-            if(data.transaction_date){
-                data.transaction_date = new Date(data.transaction_date)
-            } else {
-                data.transaction_date = new Date()
-            }
-            const sukuCadangData = await sukuCadang.addHistorySukuCadang(data);
-            if (sukuCadangData) {
-                var filter = {_id:new ObjectId(data.suku_cadang_id)}
-                var upd = {$inc : {quantity: -data.qty}, $set: {updated_at: new Date()}}
-                const update = await sukuCadang.update(filter, upd);
-            }
-            const show = await sukuCadang.showSukuCadangActivity(sukuCadangData.insertedId);
-            var message = {success: true, data: show};
-            res.status(200).send(message);
+            const result = await this._outboundSukuCadang(req.body);
+            res.status(200).send(result);
         } catch (error) {
-            var message = {success:false, error: error.message};
+            var message = { success: false, error: error.message };
             // await help.pushTelegram(req, error.message);
-            res.status(500);
-            res.send(message);
+            res.status(500).send(message);
         }
     }
 
@@ -250,6 +258,134 @@ class SkController{
             res.send(message);
         }
     }
+
+    async upFile(req, res){
+        try {
+            // Pastikan file ada
+            if (!req.file) {
+            return res.status(400).json({ success: false, message: "No file uploaded" });
+            }
+
+            // Baca file Excel
+            const workbook = XLSX.readFile(req.file.path);
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+
+            // Konversi ke JSON
+            const jsonData = XLSX.utils.sheet_to_json(sheet, { defval: null });
+
+            // Hapus file setelah dibaca (opsional)
+            fs.unlinkSync(req.file.path);
+
+            // mapping data dan validasi
+            const mappedData = jsonData.map((item, index) => {
+            if (!item.nama || !item.merek || !item.quantity) {
+                throw new Error(`Missing required fields in row ${index + 2}`);
+            }
+            return {
+                kode: item.kode,
+                nama: item.nama,
+                jenis: item.jenis,
+                merek: item.merek,
+                tipe: item.tipe,
+                quantity: Number(item.quantity),
+                category: item.kategori,
+                serial_number: item.serial_number.split(',').map(sn => sn.trim())
+            };
+            });
+
+            // Insert data ke database
+            const insertPromises = mappedData.map(data => sukuCadang.insert(data));
+            await Promise.all(insertPromises);
+
+            // Kirim hasil JSON
+            return res.json({
+            success: true,
+            sheetName,
+            rows: jsonData.length,
+            data: jsonData,
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+            success: false,
+            message: "Error processing file",
+            error: error.message,
+            });
+        }
+        };
+
+        async upFileActivity(req, res){
+        try {
+            // Pastikan file ada
+            if (!req.file) {
+            return res.status(400).json({ success: false, message: "No file uploaded" });
+            }
+
+            // Baca file Excel
+            const workbook = XLSX.readFile(req.file.path);
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+
+            // Konversi ke JSON
+            const jsonData = XLSX.utils.sheet_to_json(sheet, { defval: null });
+            // console.log(jsonData);
+
+            // Hapus file setelah dibaca (opsional)
+            fs.unlinkSync(req.file.path);
+
+            // mapping data dan validasi
+            const mappedDataPromises = jsonData.map(async (item, index) => {
+                const sc = await sukuCadang.findOne({ kode: item.kode_sukucadang}, { projection: { _id: 1 } });
+                if (!sc) {
+                    throw new Error(`Suku cadang tidak ditemukan untuk nama: ${item.nama}, merek: ${item.merek} di row ${index + 2}`);
+                }
+                const meta = await metadata.findOne({ kode: item.site }, { projection: { _id: 1 } });
+                return {
+                    suku_cadang_id: sc._id,
+                    type: item.jenis === 'inbound' ? 'inbound' : 'outbound',
+                    created_at: new Date(),
+                    petugas: item.petugas || 'System',
+                    jenis: item.jenis, // inbound/outbound
+                    quantity: Number(item.quantity),
+                    referensi: item.nomor_referensi,
+                    keterangan: item.keterangan,
+                    transaction_date: item.tanggal_transaksi ? new Date(item.tanggal_transaksi) : new Date(),
+                    metadata_id: meta ? meta._id : null,
+                    serial_number: item.serial_number.split(',').map(sn => sn.trim())
+                };
+            });
+            const mappedData = await Promise.all(mappedDataPromises);
+            // console.log(mappedData);
+
+            // Insert data ke database
+            const insertPromises = mappedData.map(data => {
+                if (data.jenis === 'inbound') {
+                     this._inboundSukuCadang(data);
+                } else if (data.jenis === 'outbound') {
+                     this._outboundSukuCadang(data);
+                } else {
+                    throw new Error(`Invalid type '${data.jenis}' for suku cadang activity`);
+                }
+            });
+            await Promise.all(insertPromises);
+
+            // Kirim hasil JSON
+            return res.status(200).json({
+            success: true,
+            sheetName,
+            rows: jsonData.length,
+            data: jsonData,
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+            success: false,
+            message: "Error processing file",
+            error: error.message,
+            });
+        }
+        };
 
 }
 module.exports = SkController;

@@ -40,6 +40,13 @@ class SC {
         return result;
     }
 
+    async findOne(filter, projection = {}){
+        const db = await this.getInstance();
+        filter.deleted_at = {$exists:false}
+        const result = await db.collection('suku_cadang').findOne(filter, {projection:projection});
+        return result;
+    }
+
     async update(id, upd){
         const db = await this.getInstance();
         id.deleted_at = {$exists:false}

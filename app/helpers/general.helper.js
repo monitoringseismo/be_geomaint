@@ -16,6 +16,20 @@ class Helpers {
     return html.replace(/(undefined|null)/g, '');
     }
 
+    mappingItems(data){
+        var mapped = data.map((item, index) => ({
+            
+            kode: item.kode,
+            nama: item.nama,
+            jenis: item.jenis,
+            merek: item.merek,
+            tipe: item.tipe,
+            quantity: Number(item.quantity),
+            category: item.kategori,
+            serial_number: item.serial_number.split(',').map(sn => sn.trim()),
+        }));
+    }
+
     async exportHtmlToPdf(html) {
         var file = { content: html };
         var options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'], timeout: 600000, waitUntil: 'networkidle0' };
