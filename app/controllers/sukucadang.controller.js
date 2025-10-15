@@ -144,7 +144,7 @@ class SkController{
             // if (!skcd) {
             //     throw new Error('Suku cadang tidak ditemukan');
             // }
-            var listSukuCadang = await sukuCadang.downloadHistorySukuCadang(data.filter, data.sort, data.limit);
+            var listSukuCadang = await sukuCadang.historySukuCadang(data.filter, data.sort, data.limit);
             // listSukuCadang.map((sukuCadang)=>{
             //     sukuCadang.status = help.statusLK(sukuCadang.status)
             // })
