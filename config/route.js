@@ -79,6 +79,8 @@ module.exports.route = (app) => {
     app.get('/sukucadang/:id',  sc.show);
     app.delete('/sukucadang/:id',  sc.delete);
     app.post('/sukucadang/list',  sc.list);
+    app.post('/sukucadang/download',  sc.downloadSukucadang);
+    // app.post('/sukucadang_activity/download',  sc.downloadSukucadang);
     app.post('/sukucadang/uploadFile', multer({ storage: imagehelper.itemStorage }).single("file"), sc.upFile);
     app.post('/sukucadang_activity/uploadFile', multer({ storage: imagehelper.itemStorage }).single("file"), sc.upFileActivity.bind(sc));
     app.post('/sukucadang_activity/history/:id',  sc.historySukuCadang);
@@ -86,5 +88,5 @@ module.exports.route = (app) => {
     app.post('/sukucadang_activity/inbound',  sc.inboundSukuCadang);
     app.post('/sukucadang_activity/outbound',  sc.outboundSukuCadang);
     app.post('/sukucadang_activity/rekap',  sc.rekapSukuCadang);
-
+    app.post('/sukucadang_activity/download',  sc.downloadHistorySukuCadang);
 }

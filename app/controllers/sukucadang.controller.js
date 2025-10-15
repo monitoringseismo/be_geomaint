@@ -1,9 +1,6 @@
 const SukuCadangModel = require('../models/sukucadang.model')
-// const Helpers = require('../helpers/general.helper')
-// const help = new Helpers()
 const sukuCadang = new SukuCadangModel()
 const {ObjectId} = require('mongodb')
-const axios = require('axios');
 const XLSX = require('xlsx');
 const fs = require('fs');
 const MetadataModel = require('../models/metadata.model')
@@ -44,9 +41,6 @@ class SkController{
         try {
             var data = req.body
             var listSukuCadang = await sukuCadang.list(data.filter, data.sort, data.limit);
-            // listSukuCadang.map((sukuCadang)=>{
-            //     sukuCadang.status = help.statusLK(sukuCadang.status)
-            // })
             var message = {success:true, data:listSukuCadang};
             res.status(200);
             res.send(message);
@@ -150,7 +144,7 @@ class SkController{
             // if (!skcd) {
             //     throw new Error('Suku cadang tidak ditemukan');
             // }
-            var listSukuCadang = await sukuCadang.historySukuCadang(data.filter, data.sort, data.limit);
+            var listSukuCadang = await sukuCadang.downloadHistorySukuCadang(data.filter, data.sort, data.limit);
             // listSukuCadang.map((sukuCadang)=>{
             //     sukuCadang.status = help.statusLK(sukuCadang.status)
             // })
@@ -223,6 +217,7 @@ class SkController{
         if (sukuCadangData) {
             var filter = { _id: new ObjectId(data.suku_cadang_id) }
             var upd = { $inc: { quantity: -data.quantity }, $set: { updated_at: new Date() } }
+            // console.log(filter, upd);
             await sukuCadang.update(filter, upd);
         }
         const show = await sukuCadang.showSukuCadangActivity(sukuCadangData.insertedId);
@@ -342,16 +337,16 @@ class SkController{
                 }
                 const meta = await metadata.findOne({ kode: item.site }, { projection: { _id: 1 } });
                 return {
-                    suku_cadang_id: sc._id,
+                    suku_cadang_id: sc._id.toString(),
                     type: item.jenis === 'inbound' ? 'inbound' : 'outbound',
                     created_at: new Date(),
                     petugas: item.petugas || 'System',
                     jenis: item.jenis, // inbound/outbound
-                    quantity: Number(item.quantity),
+                    qty: Number(item.quantity),
                     referensi: item.nomor_referensi,
                     keterangan: item.keterangan,
                     transaction_date: item.tanggal_transaksi ? new Date(item.tanggal_transaksi) : new Date(),
-                    metadata_id: meta ? meta._id : null,
+                    metadata_id: meta ? meta._id.toString() : null,
                     serial_number: item.serial_number.split(',').map(sn => sn.trim())
                 };
             });
@@ -386,6 +381,74 @@ class SkController{
             });
         }
         };
+
+    async downloadSukucadang(req, res){
+        try {
+            var data = req.body;
+            
+            var listSukuCadang = await sukuCadang.list(data.filter, data.sort, data.limit);
+            console.log(listSukuCadang);
+            const filePath = `public/file/sukucadang_report_${new Date().toISOString()}.xlsx`;
+            
+                const worksheet = XLSX.utils.json_to_sheet(listSukuCadang);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "SukuCadang");
+                XLSX.writeFile(workbook, filePath);
+                res.download(filePath, (err) => {
+                        if (err) {
+                            console.error("Error downloading the file:", err);
+                            res.status(500).send("Error downloading the file");
+                        }
+                        fs.unlinkSync(filePath);
+                });
+
+            // return;
+        } catch (error) {
+            var message = {success:false, error: error.message};
+            // await help.pushTelegram(req, error.message);
+            res.status(500);
+            res.send(message);
+        }
+    }
+
+    async downloadHistorySukuCadang(req, res){
+        try {
+            var data = req.body
+            if(data?.filter?.startDate && data?.filter?.endDate){
+                data.filter.created_at = {
+                    $gte: new Date(data.filter.startDate),
+                    $lte: new Date(data.filter.endDate  )
+                }
+                delete data.filter.startDate
+                delete data.filter.endDate
+            }
+            if (data?.id) {
+                data.filter = {...data.filter, suku_cadang_id: data.id}
+                delete data.id
+            }
+            // console.log(data.filter);
+            var listHistorySukuCadang = await sukuCadang.downloadHistorySukuCadang(data.filter, data.sort, data.limit);
+            // console.log(listHistorySukuCadang);
+            const filePath = `public/file/history_sukucadang_report_${new Date().toISOString()}.xlsx`;
+
+                const worksheet = XLSX.utils.json_to_sheet(listHistorySukuCadang);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "HistorySukuCadang");
+                XLSX.writeFile(workbook, filePath);
+                res.download(filePath, (err) => {
+                        if (err) {
+                            console.error("Error downloading the file:", err);
+                            res.status(500).send("Error downloading the file");
+                        }
+                        fs.unlinkSync(filePath);
+                });
+        } catch (error) {
+            var message = {success:false, error: error.message};
+            // await help.pushTelegram(req, error.message);
+            res.status(500);
+            res.send(message);
+        }
+    }
 
 }
 module.exports = SkController;

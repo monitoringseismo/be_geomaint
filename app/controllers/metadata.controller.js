@@ -1,10 +1,6 @@
 const MetadataModel = require('../models/metadata.model')
-const SessionModel = require('../models/session.model')
-const Helpers = require('../helpers/general.helper')
-const help = new Helpers()
 const metadata = new MetadataModel()
 const {ObjectId} = require('mongodb')
-const session = new SessionModel()
 const xlsx = require('xlsx');
 // var message, data
 class MetadataController{

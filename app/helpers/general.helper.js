@@ -5,6 +5,8 @@ const Metadata = require('../models/metadata.model');
 const metadata = new Metadata();
 const SkController = require('../controllers/sukucadang.controller');
 const skController = new SkController();
+const fs = require('fs');
+const XLSX = require('xlsx');
 
 class Helpers {
     encryptText(text) {
