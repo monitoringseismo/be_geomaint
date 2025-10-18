@@ -166,7 +166,7 @@ class SkController{
         if (!checkSukuCadang) {
             throw new Error('Suku cadang tidak ditemukan');
         }
-        if (!data.quantity || data.quantity <= 0) {
+        if (!data.qty || data.qty <= 0) {
             throw new Error('Qty harus lebih dari 0');
         }
         if (data.transaction_date) {
@@ -177,7 +177,7 @@ class SkController{
         const sukuCadangData = await sukuCadang.addHistorySukuCadang(data);
         if (sukuCadangData) {
             var filter = { _id: new ObjectId(data.suku_cadang_id) }
-            var upd = { $inc: { quantity: data.quantity }, $set: { updated_at: new Date() } }
+            var upd = { $inc: { quantity: data.qty }, $set: { updated_at: new Date() } }
             await sukuCadang.update(filter, upd);
         }
         const show = await sukuCadang.showSukuCadangActivity(sukuCadangData.insertedId);
@@ -202,10 +202,10 @@ class SkController{
         if (!checkSukuCadang) {
             throw new Error('Suku cadang tidak ditemukan');
         }
-        if (!data.quantity || data.quantity <= 0) {
+        if (!data.qty || data.qty <= 0) {
             throw new Error('Qty harus lebih dari 0');
         }
-        if (data.quantity > checkSukuCadang.quantity) {
+        if (data.qty > checkSukuCadang.quantity) {
             throw new Error('Qty melebihi stok yang ada');
         }
         if (data.transaction_date) {
@@ -216,7 +216,7 @@ class SkController{
         const sukuCadangData = await sukuCadang.addHistorySukuCadang(data);
         if (sukuCadangData) {
             var filter = { _id: new ObjectId(data.suku_cadang_id) }
-            var upd = { $inc: { quantity: -data.quantity }, $set: { updated_at: new Date() } }
+            var upd = { $inc: { quantity: -data.qty }, $set: { updated_at: new Date() } }
             // console.log(filter, upd);
             await sukuCadang.update(filter, upd);
         }

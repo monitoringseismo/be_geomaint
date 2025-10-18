@@ -85,8 +85,8 @@ module.exports.route = (app) => {
     app.post('/sukucadang_activity/uploadFile', multer({ storage: imagehelper.itemStorage }).single("file"), sc.upFileActivity.bind(sc));
     app.post('/sukucadang_activity/history/:id',  sc.historySukuCadang);
     app.post('/sukucadang_activity/list',  sc.listHistorySukuCadang);
-    app.post('/sukucadang_activity/inbound',  sc.inboundSukuCadang);
-    app.post('/sukucadang_activity/outbound',  sc.outboundSukuCadang);
+    app.post('/sukucadang_activity/inbound',  sc.inboundSukuCadang.bind(sc));
+    app.post('/sukucadang_activity/outbound',  sc.outboundSukuCadang.bind(sc));
     app.post('/sukucadang_activity/rekap',  sc.rekapSukuCadang);
     app.post('/sukucadang_activity/rekap/download',  sc.rekapSukuCadangDownload);
     app.post('/sukucadang_activity/download',  sc.downloadHistorySukuCadang);
