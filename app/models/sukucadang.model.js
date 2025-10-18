@@ -357,7 +357,7 @@ class SC {
                 "qty": 1, 
                 "jenis": 1, 
                 "keterangan": 1, 
-                "tanggal transaksi": "$suku_cadang.transaction_date", 
+                "tanggal transaksi": "$transaction_date", 
                 "user": { $arrayElemAt: ["$officer.name", 0] }, 
                 "stasiun": { $arrayElemAt: ["$stasiun.stasiun_pj", 0] },
                 "kode site": { $arrayElemAt: ["$stasiun.kode", 0] }
