@@ -382,10 +382,10 @@ async rekapSukuCadangActivity(startDate, endDate){
         const result = await db.collection("history_suku_cadang").aggregate([
             {
                 $match: {
-                // transaction_date: {
-                //     $gte: startDate,
-                //     $lte: endDate
-                // }
+                transaction_date: {
+                    $gte: startDate,
+                    $lte: endDate
+                }
                 }
             },
             {
