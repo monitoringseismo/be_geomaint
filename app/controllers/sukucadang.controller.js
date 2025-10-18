@@ -254,6 +254,35 @@ class SkController{
         }
     }
 
+    async rekapSukuCadangDownload(req, res){
+        try {
+            var data = req.body
+            if(data?.startDate && data?.endDate){
+                var startDate = new Date(data.startDate);
+                var endDate = new Date(data.endDate);
+            }
+            const rekap = await sukuCadang.rekapSukuCadangActivity(startDate, endDate);
+            const filePath = `public/file/rekap_sukucadang_report_${startDate.toISOString()}-${endDate.toISOString()}.xlsx`;
+
+            const worksheet = XLSX.utils.json_to_sheet(rekap);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "RekapSukuCadang");
+            XLSX.writeFile(workbook, filePath);
+                res.download(filePath, (err) => {
+                        if (err) {
+                            console.error("Error downloading the file:", err);
+                            res.status(500).send("Error downloading the file");
+                        }
+                        fs.unlinkSync(filePath);
+                });
+        } catch (error) {
+            var message = {success:false, error: error.message};
+            // await help.pushTelegram(req, error.message);
+            res.status(500);
+            res.send(message);
+        }
+    }
+
     async upFile(req, res){
         try {
             // Pastikan file ada

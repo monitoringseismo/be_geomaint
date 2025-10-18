@@ -88,5 +88,6 @@ module.exports.route = (app) => {
     app.post('/sukucadang_activity/inbound',  sc.inboundSukuCadang);
     app.post('/sukucadang_activity/outbound',  sc.outboundSukuCadang);
     app.post('/sukucadang_activity/rekap',  sc.rekapSukuCadang);
+    app.post('/sukucadang_activity/rekap/download',  sc.rekapSukuCadangDownload);
     app.post('/sukucadang_activity/download',  sc.downloadHistorySukuCadang);
 }
