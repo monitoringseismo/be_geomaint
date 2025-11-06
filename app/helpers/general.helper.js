@@ -141,10 +141,24 @@ class Helpers {
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0 auto;
-            max-width: 800px;
+            margin: 50px auto;
+            max-width: 1000px;
             padding: 20px;
+            font-size: 16px;
             line-height: 1.6;
+        }
+        @page {
+            margin: 2cm;
+            size: A4;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        .page-break {
+            page-break-before: always;
+            margin-top: 50px;
+            margin-bottom: 50px;
         }
         header, .section {
             margin-bottom: 20px;
@@ -283,12 +297,12 @@ class Helpers {
                     <table>
                         <thead><tr><th>Nama</th><th>NIP</th><th>Pangkat/Golongan</th><th>Jabatan</th></tr></thead>
                         <tbody>
-                            ${data.pelaksana.map(p => `<tr><td>${p.Nama}</td><td>${p.NIP}</td><td>${p.PangkatGolongan}</td><td>${p.Jabatan}</td></tr>`).join('')}
+                            ${data.pelaksana.map(p => `<tr><td>${p.Nama}</td><td>${p.NIP}</td><td>${p["Pangkat/Golongan"]}</td><td>${p.Jabatan}</td></tr>`).join('')}
                         </tbody>
                     </table>
                 </div>
 
-                <div class="section">
+                <div class="section page-break">
                     <h3>III. URAIAN PELAKSANAAN KEGIATAN</h3>
                     <h4>Peralatan</h4>
                     <table>
@@ -335,7 +349,7 @@ class Helpers {
                     </table>
                 </div>
 
-                <div class="section">
+                <div class="section page-break">
                     <h3>LAMPIRAN</h3>
 
                     <h4>Lampiran 1: Dokumentasi Kegiatan</h4>
@@ -370,6 +384,7 @@ class Helpers {
                             </td>
                         </tr>
                     </table>
+                    <div class="section page-break"></div>
                     <p><strong>Lampiran</strong></p>
                      <p><strong> Berita Acara Serah Terima Barang</strong><br/>
                      <strong>Nomor:</strong> ${data.lampiran.serahTerimaBarang.nomor}<br/>
@@ -456,10 +471,23 @@ return `
     <meta charset="UTF-8">
     <title>Form Pemeliharaan</title>
     <style>
+    @page {
+            margin: 2cm;
+            size: A4;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        .page-break {
+            page-break-before: always;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
       body { font-family: Arial, sans-serif; margin: 10px; font-size: 14px }
       .container { max-width: 800px; margin: auto; border: 1px solid #ccc; padding: 10px; }
       .header { display: flex; justify-content: space-between; }
-      .header img { width: 60px; height: auto; }
+      .header img { width: 60px; height: 75px; }
       .header-info { text-align: left; }
       .title { text-align: center; margin: 5px 0; font-weight: bold; }
       table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
@@ -473,7 +501,7 @@ return `
   <body>
     <div class="container">
       <div class="header">
-        <img src="https://possaku.store/dev/monitor/images/Logo_BMKG.png" />
+        <img src="https://possaku.store/dev/monitor/images/Logo_BMKG.png"  />
         <div class="title"><h2>DIREKTORAT INSTRUMENTASI DAN KALIBRASI</h2></div>
         <div class="header-info">
           <p>
@@ -565,7 +593,7 @@ return `
   const teknisiHtml = formData.teknisi.map(t => `
     <div style="display:inline-block; width:100px; margin:0 10px;">
       <div class="signature-box">
-        ${t.ttd_path ? `<img src="${t.ttd_path}" alt="Ttd Teknisi" style="max-height: 80px;">` : ""}
+        ${t.ttd_path ? `<img src="${process.env.BASE_URL}${t.ttd_path}" alt="Ttd Teknisi" style="max-height: 80px;">` : ""}
       </div>
       <span>${t.nama}</span>
     </div>
@@ -578,12 +606,53 @@ return `
   <meta charset="UTF-8">
   <title>Checklist Form</title>
   <style>
-    body { font-family: Arial, sans-serif; font-size: 12px; margin: 20px; }
-    .container { width: 800px; margin: auto; }
+  @page {
+            margin-left: 20px;
+            margin-right: 20px;
+            size: A4;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        .page-break {
+            page-break-before: always;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+    body { font-family: Arial, sans-serif; font-size: 14px; margin: 20px;}
+    .container { width: 800px; margin: auto; margin-right: 20px; }
     table { width: 100%; border-collapse: collapse; }
     td { padding: 5px; vertical-align: top; }
-    .header-table td { border: solid; }
-    .header-table .title-section { text-align: center; font-weight: bold; font-size: 18px; }
+    .header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .header img {
+            width: 100px;
+            height: auto;
+        }
+        .header .title {
+            flex-grow: 1;
+        }
+        .header h3, .header h4 {
+            margin: 5px 0;
+        }
+    .doc-info {
+            float: right;
+            text-align: left;
+            margin-left: 10px;
+        }
+        .doc-info table {
+            border-collapse: collapse;
+        }
+        .doc-info td {
+            padding: 2px 5px;
+        }
     .main-content-table, .main-content-table th, .main-content-table td { border: 1px solid black; }
     .main-content-table th { text-align: center; font-weight: bold; background-color: #f2f2f2; }
     .signature-table { margin-top: 40px; text-align: center; }
@@ -594,26 +663,37 @@ return `
 </head>
 <body>
   <div class="container">
-    <table class="header-table">
-      <tr>
-        <td><img src="https://possaku.store/dev/monitor/images/Logo_BMKG.png" style="width:90px;"></td>
-        <td class="title-section">DIREKTORAT INSTRUMENTASI DAN KALIBRASI</td>
-        <td>
-          <table>
-            <tr><td>No. Dokumen</td><td>:</td><td>${formData.no_dokumen}</td></tr>
-            <tr><td>Tanggal terbit</td><td>:</td><td>${formData.tanggal_naskah}</td></tr>
-            <tr><td>No. Revisi</td><td>:</td><td>${formData.no_revisi}</td></tr>
-            <tr><td>Halaman</td><td>:</td><td>${formData.halaman}</td></tr>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="3" class="title-section">
-          FORM CHECKLIST PERALATAN DAN PERLENGKAPAN<br>
-          PERSIAPAN PEMELIHARAAN ALOPTAMA
-        </td>
-      </tr>
-    </table>
+  <div class="header">
+        <img src="https://possaku.store/dev/monitor/images/Logo_BMKG.png" alt="BMKG Logo">
+        <div class="title">
+            <h3>DIREKTORAT INSTRUMENTASI DAN KALIBRASI</h3>
+            <h4>FORM CHECKLIST PERALATAN DAN PERLENGKAPAN<br>PERSIAPAN PEMELIHARAAN ALOPTAMA</h4>
+        </div>
+        <div class="doc-info">
+            <table>
+                <tr>
+                    <td>No. Dokumen</td>
+                    <td>:</td>
+                    <td id="no_dokumen">${formData.no_dokumen}</td>
+                </tr>
+                <tr>
+                    <td>Tanggal Naskah</td>
+                    <td>:</td>
+                    <td id="tanggal_terbit">${formData.tanggal_naskah}</td>
+                </tr>
+                <tr>
+                    <td>No. Revisi</td>
+                    <td>:</td>
+                    <td id="no_revisi">${formData.no_revisi}</td>
+                </tr>
+                <tr>
+                    <td>Halaman</td>
+                    <td>:</td>
+                    <td id="halaman">${formData.halaman}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
     <br>
     <table>
@@ -645,7 +725,7 @@ return `
       <tr>
         <td>
           <div class="signature-box">
-            ${formData.ketua_tim.ttd_path ? `<img src="${formData.ketua_tim.ttd_path}" style="max-height:80px;">` : ""}
+            ${formData.ketua_tim.ttd_path ? `<img src="${process.env.BASE_URL}${formData.ketua_tim.ttd_path}" style="max-height:80px;">` : ""}
           </div>
           ${formData.ketua_tim.nama}<br>
           NIP. ${formData.ketua_tim.nip}
@@ -668,6 +748,20 @@ return `
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FORM IDENTIFIKASI KERUSAKAN PERALATAN</title>
     <style>
+    @page {
+            margin-left: 20px;
+            margin-right: 20px;
+            size: A4;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        .page-break {
+            page-break-before: always;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
         body {
             font-family: Arial, sans-serif;
             margin: 20px;

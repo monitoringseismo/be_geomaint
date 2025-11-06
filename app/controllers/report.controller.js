@@ -5,6 +5,10 @@ const help = new Helpers()
 var html_to_pdf = require('html-pdf-node');
 const report = new ReportModel()
 var message, data;
+const metadataModel = require('../models/metadata.model')
+const metadata = new metadataModel()
+const sukuCadangController = require('./sukucadang.controller')
+const sukucadang = new sukuCadangController()
 
 class ReportController {
     async show(req, res){
@@ -25,10 +29,30 @@ class ReportController {
         try {
             data = req.body;
             if (data.type === 'korektif_form') {
-                
+               var mappedDataPromises = data.lampiran.serahTerimaBarang.items.map(async (item, index) => {
+                const meta = await metadata.findOne({ kode: data.siteInfo.Kode }, { projection: { _id: 1 } });
+                return {
+                    suku_cadang_id: item.id,
+                    type: 'outbound',
+                    created_at: new Date(),
+                    petugas: item.petugas || 'System',
+                    jenis: "outbound", // inbound/outbound
+                    qty: Number(item.jumlah) || 1,
+                    referensi: data.basisPelaksanaan[0],
+                    keterangan: "Korektif Form - " + data.basisPelaksanaan[0],
+                    transaction_date: data.lampiran.serahTerimaBarang.tanggal ? new Date(data.lampiran.serahTerimaBarang.tanggal) : new Date(),
+                    metadata_id: meta ? meta._id.toString() : null,
+                    serial_number: item.serial || []
+                };
+            });
+            const mappedData = await Promise.all(mappedDataPromises);
+            // console.log("Mapped Inventory Transactions:", mappedData);
+             mappedData.forEach( (transaction) => {
+                 sukucadang._outboundSukuCadang(transaction);
+             });
             }
             const userData = await report.insert(data);
-            message = {success: true, user: help.mappingUser(userData)};
+            message = {success: true, user: userData};
             res.status(200).send(message);
         } catch (error) {
             message = {success:false, error: error.message};
@@ -80,7 +104,7 @@ class ReportController {
             }
             // const pdf = await report.pdf(id);
             res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `attachment; filename=report_${id}.pdf`);
+            res.setHeader('Content-Disposition', `inline; filename=report_${id}.pdf`);
             res.send(html);
         }  catch (error) {
             message = {success:false, error: error.message};
@@ -121,14 +145,10 @@ class ReportController {
             // const pdf = await report.pdf(id);
             // console.log(html)
             var file = { content: html };
-                        var options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox'], timeout: 600000, waitUntil: 'networkidle0', preferCSSPageSize: true, puppeteerArgs: { headless: true } };
+                        var options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox'], timeout: 600000, waitUntil: 'domcontentloaded', preferCSSPageSize: true, puppeteerArgs: { headless: true } };
                         html_to_pdf.generatePdf(file, options).then(pdfBuffer => {
-                            res.set({
-                            'Content-Type': 'application/pdf',
-                            'Content-Disposition': `attachment; filename=report_${id}.pdf`
-                            });
                             res.setHeader('Content-Type', 'application/pdf');
-                            res.setHeader('Content-Disposition', `attachment; filename=report_${id}.pdf`);
+                            res.setHeader('Content-Disposition', `inline; filename=report_${id}.pdf`);
                             res.send(pdfBuffer);
                         });
         }  catch (error) {

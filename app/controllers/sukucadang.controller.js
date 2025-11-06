@@ -178,6 +178,9 @@ class SkController{
         if (sukuCadangData) {
             var filter = { _id: new ObjectId(data.suku_cadang_id) }
             var upd = { $inc: { quantity: data.qty }, $set: { updated_at: new Date() } }
+            if (data.serial_number && Array.isArray(data.serial_number) && data.serial_number.length > 0) {
+                upd.$push = { serial_number: { $each: data.serial_number } }
+            }
             await sukuCadang.update(filter, upd);
         }
         const show = await sukuCadang.showSukuCadangActivity(sukuCadangData.insertedId);
@@ -218,6 +221,9 @@ class SkController{
             var filter = { _id: new ObjectId(data.suku_cadang_id) }
             var upd = { $inc: { quantity: -data.qty }, $set: { updated_at: new Date() } }
             // console.log(filter, upd);
+            if (data.serial_number && Array.isArray(data.serial_number) && data.serial_number.length > 0) {
+                upd.$pullAll = { serial_number: data.serial_number }
+            }
             await sukuCadang.update(filter, upd);
         }
         const show = await sukuCadang.showSukuCadangActivity(sukuCadangData.insertedId);
