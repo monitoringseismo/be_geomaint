@@ -263,11 +263,12 @@ class SkController{
     async rekapSukuCadangDownload(req, res){
         try {
             var data = req.body
-            if(data?.startDate && data?.endDate){
-                var startDate = new Date(data.startDate);
-                var endDate = new Date(data.endDate);
+            if(data?.filter?.startDate && data?.filter?.endDate){
+                var startDate = new Date(data.filter.startDate);
+                var endDate = new Date(data.filter.endDate);
             }
             const rekap = await sukuCadang.rekapSukuCadangActivity(startDate, endDate);
+            // console.log(startDate, endDate);
             const filePath = `public/file/rekap_sukucadang_report_${startDate.toISOString()}-${endDate.toISOString()}.xlsx`;
 
             const worksheet = XLSX.utils.json_to_sheet(rekap);
