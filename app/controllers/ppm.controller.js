@@ -4,6 +4,7 @@ const Helpers = require('../helpers/general.helper')
 const help = new Helpers()
 const ppm = new PpmModel()
 const {ObjectId} = require('mongodb')
+const resize = new (require('../../public/resize'))();
 const metadata = new MetadataModel()
 var html_to_pdf = require('html-pdf-node');
 var message, data
@@ -203,18 +204,15 @@ class PpmController{
     }
     async upImg(req, res){
         const filename = req.file.filename;
-        // const file = req.file.path;
-        // var size = 300;
-        // if (req.body.type == 'gaji') {
-        //   size = 600;
-        // }
-        // if (!file) {
-        //   res.status(400).send({
-        //     status: false,
-        //     data: "No File is selected.",
-        //   });
-        // }
-        // resize.resize(filename, size);
+        const file = req.file.path;
+        var size = 600;
+        if (!file) {
+          res.status(400).send({
+            status: false,
+            data: "No File is selected.",
+          });
+        }
+        resize.resize(filename, size);
         // const url = `https://possaku.s3.amazonaws.com/${process.env.AWS_S3_KEY}/images/${filename}`
         data = {succcess:true, path: `/images/${filename}`}
         res.send(data);

@@ -143,9 +143,9 @@ class ReportController {
                     break;
             }
             // const pdf = await report.pdf(id);
-            // console.log(html)
+            console.log(html)
             var file = { content: html };
-                        var options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox'], timeout: 600000, waitUntil: 'domcontentloaded', preferCSSPageSize: true, puppeteerArgs: { headless: true } };
+                        var options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox'], timeout: 60000000, waitUntil: 'domcontentloaded', preferCSSPageSize: true, puppeteerArgs: { headless: true } };
                         html_to_pdf.generatePdf(file, options).then(pdfBuffer => {
                             res.setHeader('Content-Type', 'application/pdf');
                             res.setHeader('Content-Disposition', `inline; filename=report_${id}.pdf`);

@@ -43,9 +43,9 @@ class Access_log {
     async generateToken(nsim){
         const token = helper.generateRandom(32);
         const db = await this.getInstance();
-        const where = { nsim: nsim };
-        const value = { $set: {status: "inactive"} };
-        await db.collection('sessions').updateMany(where, value);
+        // const where = { nsim: nsim };
+        // const value = { $set: {status: "inactive"} };
+        // await db.collection('sessions').updateMany(where, value);
         const newRecord = {nsim: nsim, status: "active", token: token, created_at: new Date()};
         await db.collection('sessions').insertOne(newRecord);
         return token;

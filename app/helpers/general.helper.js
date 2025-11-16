@@ -233,7 +233,7 @@ class Helpers {
             text-align: center;
         }
         .image-gallery img {
-            max-width: 100%;
+            max-width: 200px;
             border: 1px solid #ccc;
         }
         .seedlink-ok {
@@ -334,14 +334,14 @@ class Helpers {
                             <td>
                                 <p>PIHAK KEDUA</p>
                                 <p>${data.lampiran.serahTerimaBarang.pihakKedua.jabatan}</p>
-                                <div class="signature-block"></div>
+                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakKedua.ttd_path}"></div>
                                 <p><strong>${data.lampiran.serahTerimaBarang.pihakKedua.nama}</strong></p>
                                 <p>NIP. ${data.lampiran.serahTerimaBarang.pihakKedua.nip}</p>
                             </td>
                             <td>
                                 <p>PIHAK PERTAMA</p>
                                 <p>${data.lampiran.serahTerimaBarang.pihakPertama.jabatan}</p>
-                                <div class="signature-block"></div>
+                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakPertama.ttd_path}"></div>
                                 <p><strong>${data.lampiran.serahTerimaBarang.pihakPertama.nama}</strong></p>
                                 <p>NIP. ${data.lampiran.serahTerimaBarang.pihakPertama.nip}</p>
                             </td>
@@ -354,7 +354,7 @@ class Helpers {
 
                     <h4>Lampiran 1: Dokumentasi Kegiatan</h4>
                          <table class="key-value-table">
-                        ${Object.entries(data.lampiran.dokumentasiKegiatan).map(dk => `<tr><td>${dk[1].keterangan}</td><td><img src="${dk[1].foto}"></td></tr>`).join("")}
+                        ${Object.entries(data.lampiran.dokumentasiKegiatan).map(dk => `<tr><td>${dk[1].keterangan}</td><td><img src="${process.env.BASE_URL}${dk[1].foto}"></td></tr>`).join("")}
                     </table>
             
                     <h4>Lampiran 2: Laporan Monitoring Seedlink</h4>
@@ -362,7 +362,9 @@ class Helpers {
                     <img src="${process.env.BASE_URL}${data.lampiran.seedlinkMonitor}"/>
 
                     <h4>Lampiran 3: SPB/BAP/BAST</h4>
-                    <img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.foto}"/>
+                    <table class="key-value-table">
+                        ${Object.entries(data.lampiran.serahTerimaBarang.foto).map(dk => `<tr><td><img src="${process.env.BASE_URL}${dk[1]}"></td></tr>`).join("")}
+                    </table>
                     <p>
                             Demikian Serah Terima Barang suku cadang sistem observasi gempabumi inatew ini kami selenggarakan dengan seksama dan dalam keadaan sebenarnya pada hari dan tanggal tersebut di atas untuk dipergunakan sebagaimana perlunya. Berita Acara Serah Terima ini akan ditinjau kembali apabila dikemudian hari ternyata terdapat kekeliruan.
                     </p>
@@ -371,14 +373,14 @@ class Helpers {
                             <td>
                                 <p>PIHAK KEDUA</p>
                                 <p>${data.lampiran.serahTerimaBarang.pihakKedua.jabatan}</p>
-                                <div class="signature-block"></div>
+                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakKedua.ttd_path}"></div>
                                 <p><strong>${data.lampiran.serahTerimaBarang.pihakKedua.nama}</strong></p>
                                 <p>NIP. ${data.lampiran.serahTerimaBarang.pihakKedua.nip}</p>
                             </td>
                             <td>
                                 <p>PIHAK PERTAMA</p>
                                 <p>${data.lampiran.serahTerimaBarang.pihakPertama.jabatan}</p>
-                                <div class="signature-block"></div>
+                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakPertama.ttd_path}"></div>
                                 <p><strong>${data.lampiran.serahTerimaBarang.pihakPertama.nama}</strong></p>
                                 <p>NIP. ${data.lampiran.serahTerimaBarang.pihakPertama.nip}</p>
                             </td>
@@ -412,22 +414,26 @@ class Helpers {
                             <td>
                                 <p>PIHAK KEDUA</p>
                                 <p>${data.lampiran.serahTerimaBarang.pihakKedua.jabatan}</p>
-                                <div class="signature-block"></div>
+                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakKedua.ttd_path}"></div>
                                 <p><strong>${data.lampiran.serahTerimaBarang.pihakKedua.nama}</strong></p>
                                 <p>NIP. ${data.lampiran.serahTerimaBarang.pihakKedua.nip}</p>
                             </td>
                             <td>
                                 <p>PIHAK PERTAMA</p>
                                 <p>${data.lampiran.serahTerimaBarang.pihakPertama.jabatan}</p>
-                                <div class="signature-block"></div>
+                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakPertama.ttd_path}"></div>
                                 <p><strong>${data.lampiran.serahTerimaBarang.pihakPertama.nama}</strong></p>
                                 <p>NIP. ${data.lampiran.serahTerimaBarang.pihakPertama.nip}</p>
                             </td>
                         </tr>
                     </table>
-                 <img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.fotoDocSerahTerima}"/>
+                 <table class="key-value-table">
+                        ${Object.entries(data.lampiran.serahTerimaBarang.fotoDocSerahTerima).map(dk => `<tr><td><img src="${process.env.BASE_URL}${dk[1]}"></td></tr>`).join("")}
+                    </table>
                 <p><center><strong>LAMPIRAN FOTO SUKU CADANG INA-TEWS YANG DIPASANG</strong></center></p>
-                <img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.fotoPasangSukuCadang}"/>
+                <table class="key-value-table">
+                        ${Object.entries(data.lampiran.serahTerimaBarang.fotoPasangSukuCadang).map(dk => `<tr><td><img src="${process.env.BASE_URL}${dk[1]}"></td></tr>`).join("")}
+                    </table>
                 </div>
             </body>
         </html>
