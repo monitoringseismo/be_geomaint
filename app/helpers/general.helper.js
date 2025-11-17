@@ -144,16 +144,16 @@ class Helpers {
             margin: 50px auto;
             max-width: 1000px;
             padding: 20px;
-            font-size: 16px;
+            font-size: 12px;
             line-height: 1.6;
         }
         @page {
             margin: 2cm;
             size: A4;
-            margin-top: 50px;
+            margin-top: 20px;
             margin-bottom: 50px;
             font-family: Arial, sans-serif;
-            font-size: 16px;
+            font-size: 12px;
         }
         .page-break {
             page-break-before: always;
@@ -235,6 +235,9 @@ class Helpers {
         .image-gallery img {
             max-width: 200px;
             border: 1px solid #ccc;
+        }
+        img {
+            max-width: 500px;
         }
         .seedlink-ok {
              background-color: #90ee90; /* Light Green */
