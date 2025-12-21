@@ -4,7 +4,7 @@ const { ObjectId } = require('mongodb')
 const help = new Helpers()
 var html_to_pdf = require('html-pdf-node');
 const report = new ReportModel()
-var message, data;
+// var message, data;
 const metadataModel = require('../models/metadata.model')
 const metadata = new metadataModel()
 const sukuCadangController = require('./sukucadang.controller')
@@ -13,13 +13,13 @@ const sukucadang = new sukuCadangController()
 class ReportController {
     async show(req, res){
         try {
-            data = req.params;
+            var data = req.params;
             console.log("Fetching report with ID:", data.id);
             const reportData = await report.findOne({_id:new ObjectId(data.id)});
-            message = {success: true, report: reportData};
+            var message = {success: true, report: reportData};
             res.status(200).send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -27,7 +27,7 @@ class ReportController {
     }
     async insert(req, res){
         try {
-            data = req.body;
+            var data = req.body;
             if (data.type === 'korektif_form') {
                var mappedDataPromises = data.lampiran.serahTerimaBarang.items.map(async (item, index) => {
                 const meta = await metadata.findOne({ kode: data.siteInfo.Kode }, { projection: { _id: 1 } });
@@ -51,11 +51,27 @@ class ReportController {
                  sukucadang._outboundSukuCadang(transaction);
              });
             }
+            switch (data.type) {
+                case 'identifikasi_form':
+                    // Handle identifikasi_form report
+                    data.no_dokumen = "FM.WM.PI.25"
+                    break;
+                case 'checklist_form':
+                    // Handle checklist_form report
+                    data.no_dokumen = "FM.WM.PI.31"
+                    break;
+                case 'pemeliharaan_form':
+                    // Handle pemeliharaan_form report
+                    data.dokumen.no = "FM.IRG.PI.01"
+                    break;
+                default:
+                    break;
+            }
             const userData = await report.insert(data);
-            message = {success: true, user: userData};
+            var message = {success: true, user: userData};
             res.status(200).send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -64,7 +80,7 @@ class ReportController {
 
     async list(req, res){
         try {
-            data = req.body
+            var data = req.body
             const listuser = await report.list(data.filter, data.sort, data.limit);
             message = {success:true, data:listuser};
             res.status(200);
@@ -107,7 +123,7 @@ class ReportController {
             res.setHeader('Content-Disposition', `inline; filename=report_${id}.pdf`);
             res.send(html);
         }  catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message); 
@@ -152,7 +168,7 @@ class ReportController {
                             res.send(pdfBuffer);
                         });
         }  catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -161,15 +177,15 @@ class ReportController {
 
     async update(req, res){
         try {
-            data = req.body
+            var data = req.body
             var upd = {$set : data};
             var id = req.params.id;
             const update = await report.update({_id: new ObjectId(id)},upd);
-            message = {success:true, data:help.mappingUser(update)};
+            var message = {success:true, data:help.mappingUser(update)};
             res.status(200);
             res.send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
@@ -178,13 +194,13 @@ class ReportController {
 
     async delete(req, res){
         try {
-            data = req.params
+            var data = req.params
             const deleteuser = await report.delete(data.id);
-            message = {success:true, data:deleteuser};
+            var message = {success:true, data:deleteuser};
             res.status(200);
             res.send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
