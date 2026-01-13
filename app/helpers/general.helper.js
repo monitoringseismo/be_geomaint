@@ -134,6 +134,9 @@ class Helpers {
         }
     }
     exportInaTEWS(data){
+        var fotoDocSerahTerima = data.lampiran.serahTerimaBarang.fotoDocSerahTerima ? Object.entries(data.lampiran.serahTerimaBarang.fotoDocSerahTerima).map(dk => `<tr><td><img src="${process.env.BASE_URL}${dk[1]}"></td></tr>`).join("") : "";
+        var lampiranSerahTerimaFoto = data.lampiran.serahTerimaBarang.foto ? Object.entries(data.lampiran.serahTerimaBarang.foto).map(dk => `<tr><td><img src="${process.env.BASE_URL}${dk[1]}"></td></tr>`).join("") : "";
+        var fotoPasangSukuCadang = data.lampiran.serahTerimaBarang.fotoPasangSukuCadang ? Object.entries(data.lampiran.serahTerimaBarang.fotoPasangSukuCadang).map(dk => `<tr><td><img src="${process.env.BASE_URL}${dk[1]}"></td></tr>`).join("") : "";
       return `<!DOCTYPE html>
        <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -366,7 +369,7 @@ class Helpers {
 
                     <h4>Lampiran 3: SPB/BAP/BAST</h4>
                     <table class="key-value-table">
-                        ${Object.entries(data.lampiran.serahTerimaBarang.foto).map(dk => `<tr><td><img src="${process.env.BASE_URL}${dk[1]}"></td></tr>`).join("")}
+                        ${lampiranSerahTerimaFoto}
                     </table>
                     <p>
                             Demikian Serah Terima Barang suku cadang sistem observasi gempabumi inatew ini kami selenggarakan dengan seksama dan dalam keadaan sebenarnya pada hari dan tanggal tersebut di atas untuk dipergunakan sebagaimana perlunya. Berita Acara Serah Terima ini akan ditinjau kembali apabila dikemudian hari ternyata terdapat kekeliruan.
@@ -431,11 +434,11 @@ class Helpers {
                         </tr>
                     </table>
                  <table class="key-value-table">
-                        ${Object.entries(data.lampiran.serahTerimaBarang.fotoDocSerahTerima).map(dk => `<tr><td><img src="${process.env.BASE_URL}${dk[1]}"></td></tr>`).join("")}
+                        ${fotoDocSerahTerima}
                     </table>
                 <p><center><strong>LAMPIRAN FOTO SUKU CADANG INA-TEWS YANG DIPASANG</strong></center></p>
                 <table class="key-value-table">
-                        ${Object.entries(data.lampiran.serahTerimaBarang.fotoPasangSukuCadang).map(dk => `<tr><td><img src="${process.env.BASE_URL}${dk[1]}"></td></tr>`).join("")}
+                        ${fotoPasangSukuCadang}
                     </table>
                 </div>
             </body>
