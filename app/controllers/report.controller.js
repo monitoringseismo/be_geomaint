@@ -82,11 +82,11 @@ class ReportController {
         try {
             var data = req.body
             const listuser = await report.list(data.filter, data.sort, data.limit);
-            message = {success:true, data:listuser};
+            var message = {success:true, data:listuser};
             res.status(200);
             res.send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
