@@ -11,7 +11,7 @@ class OfficerController
             res.status(200);
             res.send(message);
         } catch (error) {
-            message = {success:false, error: error.message};
+            var message = {success:false, error: error.message};
             // await help.pushTelegram(req, error.message);
             res.status(500);
             res.send(message);
