@@ -210,6 +210,15 @@ class Helpers {
             text-align: center;
             width: 50%;
         }
+
+        .borderless-table {
+            border: none;
+        }
+        .borderless-table td {
+            border: none;
+            text-align: left;
+            width: 50%;
+        }
         .signature-block {
             height: 100px; 
         }
@@ -335,23 +344,13 @@ class Helpers {
                     <p>${data.saran}</p>
                 </div>
                 <div class="section">
-                         <table class="signature-table">
+                         <table class="borderless-table">
                         <tr>
                             <td>
-                                <p>PIHAK KEDUA</p>
-                                <p>${data.lampiran.serahTerimaBarang.pihakKedua.jabatan}</p>
-                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakKedua.ttd_path}" width="100px"></div>
-                                <p><strong>${data.lampiran.serahTerimaBarang.pihakKedua.nama}</strong></p>
-                                <p>NIP. ${data.lampiran.serahTerimaBarang.pihakKedua.nip}</p>
-                            </td>
-                            <td>
-                                <p>PIHAK PERTAMA</p>
-                                <p>${data.lampiran.serahTerimaBarang.pihakPertama.jabatan}</p>
-                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakPertama.ttd_path}" width="100px"></div>
-                                <p><strong>${data.lampiran.serahTerimaBarang.pihakPertama.nama}</strong></p>
-                                <p>NIP. ${data.lampiran.serahTerimaBarang.pihakPertama.nip}</p>
+                                <center>Pelaksana</center>
                             </td>
                         </tr>
+                            ${data.pelaksana.map((p,i) => `<tr><td>${i+1}. <u>${p.Nama}</u> <br><p style="margin-left: 10px;"> ${p.NIP} </p></td></tr>`).join('')}
                     </table>
                 </div>
 
