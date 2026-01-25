@@ -160,8 +160,8 @@ class Helpers {
         }
         .page-break {
             page-break-before: always;
-            margin-top: 50px;
-            margin-bottom: 50px;
+            margin-top: 70px;
+            margin-bottom: 70px;
         }
         header, .section {
             margin-bottom: 20px;
@@ -170,6 +170,7 @@ class Helpers {
 /*            text-align: center;*/
             border-bottom: 3px solid black;
             padding-bottom: 10px;
+            margin-top: -50px;
         }
         header img {
             width: 100px;
@@ -249,7 +250,8 @@ class Helpers {
             border: 1px solid #ccc;
         }
         img {
-            max-width: 500px;
+            max-width: 400px;
+            max-height: 400px;
         }
         .seedlink-ok {
              background-color: #90ee90; /* Light Green */
@@ -354,12 +356,13 @@ class Helpers {
                     </table>
                 </div>
 
-                <div class="section page-break">
+                <div class="section">
+                <div class="page-break"></div>
                     <h3>LAMPIRAN</h3>
 
                     <h4>Lampiran 1: Dokumentasi Kegiatan</h4>
                          <table class="key-value-table">
-                        ${Object.entries(data.lampiran.dokumentasiKegiatan).map(dk => `<tr><td>${dk[1].keterangan}</td><td><img src="${process.env.BASE_URL}${dk[1].foto}"></td></tr>`).join("")}
+                        ${Object.entries(data.lampiran.dokumentasiKegiatan).map(dk => `<tr><td>${dk[1].keterangan}</td><td><img class="lampiran-image" src="${process.env.BASE_URL}${dk[1].foto}"></td></tr>`).join("")}
                     </table>
             
                     <h4>Lampiran 2: Laporan Monitoring Seedlink</h4>
@@ -370,7 +373,7 @@ class Helpers {
                     <table class="key-value-table">
                         ${lampiranSerahTerimaFoto}
                     </table>
-                    <p>
+                    <p class="page-break">
                             Demikian Serah Terima Barang suku cadang sistem observasi gempabumi inatew ini kami selenggarakan dengan seksama dan dalam keadaan sebenarnya pada hari dan tanggal tersebut di atas untuk dipergunakan sebagaimana perlunya. Berita Acara Serah Terima ini akan ditinjau kembali apabila dikemudian hari ternyata terdapat kekeliruan.
                     </p>
                              <table class="signature-table">
@@ -391,8 +394,9 @@ class Helpers {
                             </td>
                         </tr>
                     </table>
-                    <div class="section page-break"></div>
-                    <p><strong>Lampiran</strong></p>
+                    <div class="section"></div>
+                    <div class="page-break"></div>
+                    <p style="padding-top: 50px;"><strong>Lampiran</strong></p>
                      <p><strong> Berita Acara Serah Terima Barang</strong><br/>
                      <strong>Nomor:</strong> ${data.lampiran.serahTerimaBarang.nomor}<br/>
                      <strong>Tanggal:</strong> ${data.lampiran.serahTerimaBarang.tanggal}</p>
@@ -432,10 +436,12 @@ class Helpers {
                             </td>
                         </tr>
                     </table>
+                    <div class="page-break"></div>
                  <table class="key-value-table">
                         ${fotoDocSerahTerima}
                     </table>
-                <p><center><strong>LAMPIRAN FOTO SUKU CADANG INA-TEWS YANG DIPASANG</strong></center></p>
+                    <div class="page-break"></div>
+                <p style="padding-top: 50px;"><center><strong>LAMPIRAN FOTO SUKU CADANG INA-TEWS YANG DIPASANG</strong></center></p>
                 <table class="key-value-table">
                         ${fotoPasangSukuCadang}
                     </table>
