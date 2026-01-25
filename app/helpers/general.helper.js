@@ -381,14 +381,14 @@ class Helpers {
                             <td>
                                 <p>PIHAK KEDUA</p>
                                 <p>${data.lampiran.serahTerimaBarang.pihakKedua.jabatan}</p>
-                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakKedua.ttd_path}" width="100px"></div>
+                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakKedua.ttd_path}" height="100px"></div>
                                 <p><strong>${data.lampiran.serahTerimaBarang.pihakKedua.nama}</strong></p>
                                 <p>NIP. ${data.lampiran.serahTerimaBarang.pihakKedua.nip}</p>
                             </td>
                             <td>
                                 <p>PIHAK PERTAMA</p>
                                 <p>${data.lampiran.serahTerimaBarang.pihakPertama.jabatan}</p>
-                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakPertama.ttd_path}" width="100px"></div>
+                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakPertama.ttd_path}" height="100px"></div>
                                 <p><strong>${data.lampiran.serahTerimaBarang.pihakPertama.nama}</strong></p>
                                 <p>NIP. ${data.lampiran.serahTerimaBarang.pihakPertama.nip}</p>
                             </td>
@@ -423,14 +423,14 @@ class Helpers {
                             <td>
                                 <p>PIHAK KEDUA</p>
                                 <p>${data.lampiran.serahTerimaBarang.pihakKedua.jabatan}</p>
-                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakKedua.ttd_path}" width="100px"></div>
+                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakKedua.ttd_path}" height="100px"></div>
                                 <p><strong>${data.lampiran.serahTerimaBarang.pihakKedua.nama}</strong></p>
                                 <p>NIP. ${data.lampiran.serahTerimaBarang.pihakKedua.nip}</p>
                             </td>
                             <td>
                                 <p>PIHAK PERTAMA</p>
                                 <p>${data.lampiran.serahTerimaBarang.pihakPertama.jabatan}</p>
-                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakPertama.ttd_path}" width="100px"></div>
+                                <div class="signature-block"><img src="${process.env.BASE_URL}${data.lampiran.serahTerimaBarang.pihakPertama.ttd_path}" height="100px"></div>
                                 <p><strong>${data.lampiran.serahTerimaBarang.pihakPertama.nama}</strong></p>
                                 <p>NIP. ${data.lampiran.serahTerimaBarang.pihakPertama.nip}</p>
                             </td>
