@@ -137,6 +137,48 @@ class Helpers {
         var fotoDocSerahTerima = data.lampiran.serahTerimaBarang.fotoDocSerahTerima ? Object.entries(data.lampiran.serahTerimaBarang.fotoDocSerahTerima).map(dk => `<tr><td><img src="${process.env.BASE_URL}${dk[1]}"></td></tr>`).join("") : "";
         var lampiranSerahTerimaFoto = data.lampiran.serahTerimaBarang.foto ? Object.entries(data.lampiran.serahTerimaBarang.foto).map(dk => `<tr><td><img src="${process.env.BASE_URL}${dk[1]}"></td></tr>`).join("") : "";
         var fotoPasangSukuCadang = data.lampiran.serahTerimaBarang.fotoPasangSukuCadang ? Object.entries(data.lampiran.serahTerimaBarang.fotoPasangSukuCadang).map(dk => `<tr><td><img src="${process.env.BASE_URL}${dk[1]}"></td></tr>`).join("") : "";
+        
+        function generateTableHTML() {
+            // console.log(data)
+            let rows = "";
+            var dk = data.lampiran.dokumentasiKegiatan;
+
+            for (let i = 0; i < dk.length; i += 2) {
+                // ROW FOTO
+                rows += "<tr>";
+
+                for (let j = i; j < i + 2; j++) {
+                if (dk[j]) {
+                    rows += `
+                    <td>
+                        <img src="${process.env.BASE_URL}${dk[j].foto}"/>
+                    </td>
+                    `;
+                } else {
+                    rows += "<td></td>";
+                }
+                }
+                rows += "</tr>";
+
+                // ROW KETERANGAN
+                rows += "<tr>";
+                for (let j = i; j < i + 2; j++) {
+                if (dk[j]) {
+                    rows += `
+                    <td class="keterangan">
+                        ${dk[j].keterangan}
+                    </td>
+                    `;
+                } else {
+                    rows += "<td></td>";
+                }
+                }
+                rows += "</tr>";
+            }
+
+            return rows;
+            }
+
       return `<!DOCTYPE html>
        <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -346,13 +388,13 @@ class Helpers {
                     <p>${data.saran}</p>
                 </div>
                 <div class="section">
-                         <table class="borderless-table">
+                         <table class="borderless-table" width="90%">
                         <tr>
-                            <td>
+                            <td colspan="2">
                                 <center>Pelaksana</center>
                             </td>
                         </tr>
-                            ${data.pelaksana.map((p,i) => `<tr><td>${i+1}. <u>${p.Nama}</u> <br><p style="margin-left: 10px;"> ${p.NIP} </p></td></tr>`).join('')}
+                            ${data.pelaksana.map((p,i) => `<tr><td>${i+1}. <u>${p.Nama}</u> <br><p style="margin-left: 10px;"> ${p.NIP} </p></td> <td><center><img src="${process.env.BASE_URL}${p.ttd_path}"height="50px"></center></td></tr>`).join('')}
                     </table>
                 </div>
 
@@ -361,10 +403,10 @@ class Helpers {
                     <h3>LAMPIRAN</h3>
 
                     <h4>Lampiran 1: Dokumentasi Kegiatan</h4>
-                         <table class="key-value-table">
-                        ${Object.entries(data.lampiran.dokumentasiKegiatan).map(dk => `<tr><td>${dk[1].keterangan}</td><td><img class="lampiran-image" src="${process.env.BASE_URL}${dk[1].foto}"></td></tr>`).join("")}
+                    <table>
+                         ${generateTableHTML()}
                     </table>
-            
+                    <div class="page-break"></div>
                     <h4>Lampiran 2: Laporan Monitoring Seedlink</h4>
                     
                     <img src="${process.env.BASE_URL}${data.lampiran.seedlinkMonitor}"/>
